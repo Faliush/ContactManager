@@ -1,6 +1,7 @@
 using IdentityServer;
 using IdentityServer.Data;
 using IdentityServer.Data.Base;
+using IdentityServer.Data.DatabaseInitializer;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,7 @@ builder.Services.AddIdentityServer(config =>
 {
     config.UserInteraction.LoginUrl = "Account/Login";
 })
+    .AddAspNetIdentity<ApplicationUser>()
     //.AddConfigurationStore(options =>
     //{
     //    options.ConfigureDbContext =
@@ -53,6 +55,8 @@ builder.Services.ConfigureApplicationCookie(config =>
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+DatabaseInitializer.SeedUser(app.Services, app.Configuration);
 
 app.UseStaticFiles();
 
