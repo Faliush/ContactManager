@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var migrationAssembly = typeof(Program).Assembly.GetName().Name;
 
+builder.Services.AddCors();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
     {
         options.UseInMemoryDatabase("MEMORY");
@@ -24,7 +26,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddIdentityServer(config =>
 {
-    config.UserInteraction.LoginUrl = "Account/Login";
+    config.UserInteraction.LoginUrl = "/Account/Login";
 })
     .AddAspNetIdentity<ApplicationUser>()
     //.AddConfigurationStore(options =>
@@ -43,12 +45,13 @@ builder.Services.AddIdentityServer(config =>
     .AddInMemoryApiResources(Configuration.GetApiResources())
     .AddInMemoryClients(Configuration.GetClients())
     .AddInMemoryIdentityResources(Configuration.GetIdentityResources())
+    .AddInMemoryApiScopes(Configuration.GetApiScopes())
     .AddDeveloperSigningCredential();
 
 builder.Services.ConfigureApplicationCookie(config => 
 {
-    config.LoginPath = "Account/Login";
-    config.LogoutPath = "Account/Logout";
+    config.LoginPath = "/Account/Login";
+    config.LogoutPath = "/Account/Logout";
 });
 
 
@@ -56,13 +59,19 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-DatabaseInitializer.SeedUser(app.Services, app.Configuration);
+//DatabaseInitializer.SeedUser(app.Services, app.Configuration);
 
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseCors(builder => 
+{
+    builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+});
+
 app.UseIdentityServer();
+
 
 app.MapControllers();
 

@@ -1,17 +1,29 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(config =>
+    {
+        config.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ClockSkew = TimeSpan.FromMinutes(15)
+        };
+
+        config.Authority = "https://localhost:10001";
+        config.Audience = "ContactAPI";
+    });
 
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
