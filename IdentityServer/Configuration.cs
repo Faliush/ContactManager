@@ -11,27 +11,38 @@ namespace IdentityServer
             {
                 new Client()
                 {
-                    ClientId = "client_id",
-                    ClientSecrets = { new Secret("client_secret".ToSha256()) },
-
+                    ClientId = "blazor_client",
+                    
                     AllowedGrantTypes = GrantTypes.Code,
 
                     AllowedScopes = 
                     {
-                        "ContactManagerAPI",
+                        "ContactAPI",
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
                     },
 
-                    RedirectUris = { "https://localhost:7001/signin-oidc"}
+                    RedirectUris = { "https://localhost:7001/authentication/login-callback"},
+                    PostLogoutRedirectUris = { "https://localhost:7001/authentication/logout-callback"},
+                    
+                    RequireConsent = false,
+                    RequireClientSecret= false,
+                    RequirePkce = true,
 
+                    AllowedCorsOrigins = { "https://localhost:7001" }
                 }
+            };
+
+        public static IEnumerable<ApiScope> GetApiScopes() =>
+            new List<ApiScope>
+            {
+                new ApiScope("ContactAPI")
             };
 
         public static IEnumerable<ApiResource> GetApiResources() =>
             new List<ApiResource>
             {
-                new ApiResource("ContactManagerAPI")
+                new ApiResource("ContactAPI")
             };
 
         public static IEnumerable<IdentityResource> GetIdentityResources() =>
