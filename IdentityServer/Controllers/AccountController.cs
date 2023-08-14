@@ -1,33 +1,32 @@
 ﻿using IdentityServer.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IdentityServer.Controllers
+namespace IdentityServer.Controllers;
+
+[Route("[controller]")]
+public class AccountController : Controller
 {
-    [Route("[controller]")]
-    public class AccountController : Controller
+    [HttpGet("[action]")]
+    public IActionResult Login()
     {
-        [HttpGet("[action]")]
-        public IActionResult Login()
-        {
-            return View();
-        }
+        return View();
+    }
 
-        [HttpPost("[action]")]
-        public IActionResult Login(LoginViewModel loginViewModel ,string? ReturnUrl) 
-        {
-            return View(loginViewModel);
-        }
+    [HttpPost("[action]")]
+    public IActionResult Login(LoginViewModel loginViewModel ,string? ReturnUrl) 
+    {
+        return View(loginViewModel);
+    }
 
-        [HttpGet("[action]")]
-        public IActionResult Register()
-        {
-            return View();
-        }
+    [HttpGet("[action]")]
+    public IActionResult Register()
+    {
+        return View();
+    }
 
-        [HttpPost("[action]")]
-        public IActionResult Register(RegisterViewModel registerViewModel)
-        {
-            return View(registerViewModel);
-        }
+    [HttpPost("[action]")]
+    public IActionResult Register(RegisterViewModel registerViewModel)
+    {
+        return View(registerViewModel);
     }
 }

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Data
+namespace IdentityServer.Data;
+
+public class ApplicationRole : IdentityRole<Guid>
 {
-    public class ApplicationRole : IdentityRole<Guid>
-    {
-    }
 }

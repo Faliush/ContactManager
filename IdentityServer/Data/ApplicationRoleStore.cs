@@ -2,12 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace IdentityServer.Data
+namespace IdentityServer.Data;
+
+public class ApplicationRoleStore : RoleStore<ApplicationRole, ApplicationDbContext, Guid>
 {
-    public class ApplicationRoleStore : RoleStore<ApplicationRole, ApplicationDbContext, Guid>
+    public ApplicationRoleStore(ApplicationDbContext context, IdentityErrorDescriber describer = null) : base(context, describer)
     {
-        public ApplicationRoleStore(ApplicationDbContext context, IdentityErrorDescriber describer = null) : base(context, describer)
-        {
-        }
     }
 }
