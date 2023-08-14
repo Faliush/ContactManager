@@ -24,13 +24,13 @@ namespace IdentityServer.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult Login()
+        public IActionResult Login(string ReturnUrl)
         {
             return View();
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Login(LoginViewModel loginViewModel, string? ReturnUrl) 
+        public async Task<IActionResult> Login(LoginViewModel loginViewModel) 
         {
             if (!ModelState.IsValid)
             {
@@ -50,11 +50,11 @@ namespace IdentityServer.Controllers
 
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("User", "Something went wrong");
+                ModelState.AddModelError("Sign in", "Something went wrong");
                 return View(loginViewModel);
             }
 
-            return Redirect(ReturnUrl);
+            return Redirect(loginViewModel.ReturnUrl);
         }
 
         [HttpGet("[action]")]

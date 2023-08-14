@@ -8,9 +8,11 @@
                      class="img-fluid" alt="Sample image">
             </div>
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <form asp-controller="Account" asp-action="Login" method="post" asp-route-ReturnUrl="@Context.Request.Query["ReturnUrl"]">
+                <form asp-controller="Account" asp-action="Login" method="post">
 
                     <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <input type="hidden" asp-for="ReturnUrl"/>
 
                     <!-- Email input -->
                     <div class="form-outline mb-4">
@@ -31,7 +33,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <!-- Checkbox -->
                         <div class="form-check mb-0">
-                            <input asp-for="RememberMe" class="form-check-input me-2" type="checkbox" value="false"/>
+                            <input asp-for="RememberMe" class="form-check-input me-2" type="checkbox" />
                             <label asp-for="RememberMe" class="form-check-label">
                                 Remember me
                             </label>
