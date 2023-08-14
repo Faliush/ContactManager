@@ -39,19 +39,17 @@ public static  class DatabaseInitializer
             var password = new PasswordHasher<ApplicationUser>();
             var hashed = password.HashPassword(developer, configuration["Secret:AdministratorPassword"]);
             developer.PasswordHash = hashed;
-            var userStore = scope.ServiceProvider.GetRequiredService<ApplicationUserStore>();
-            var resutl = await userStore.CreateAsync(developer);
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var resutl = await userManager.CreateAsync(developer);
 
             if(!resutl.Succeeded)
                 throw new InvalidOperationException("Cannot create account");
 
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             foreach(var role in roles)
             {
                 var roleAdded = await userManager.AddToRoleAsync(developer, role);
                 if (roleAdded.Succeeded)
                     await context.SaveChangesAsync();
-
             }
         }
         
