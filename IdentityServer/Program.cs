@@ -57,7 +57,7 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-//DatabaseInitializer.SeedUser(app.Services, app.Configuration);
+DatabaseInitializer.SeedUser(app.Services, app.Configuration);
 
 app.UseStaticFiles();
 
