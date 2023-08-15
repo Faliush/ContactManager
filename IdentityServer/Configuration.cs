@@ -28,6 +28,7 @@ namespace IdentityServer
                     RequireConsent = false,
                     RequireClientSecret= false,
                     RequirePkce = true,
+                    AllowOfflineAccess = true,
 
                     AllowedCorsOrigins = { "https://localhost:7001" }
                 }
