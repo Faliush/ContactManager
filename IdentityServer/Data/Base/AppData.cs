@@ -1,18 +1,17 @@
-﻿namespace IdentityServer.Data.Base
+﻿namespace IdentityServer.Data.Base;
+
+public class AppData
 {
-    public class AppData
+    public const string AdministratorRoleName = "Administrator";
+
+    public const string UserRoleName = "User";
+
+    public static IEnumerable<string> Roles
     {
-        public const string AdministratorRoleName = "Administrator";
-
-        public const string UserRoleName = "User";
-
-        public static IEnumerable<string> Roles
+        get
         {
-            get
-            {
-                yield return AdministratorRoleName;
-                yield return UserRoleName;
-            }
+            yield return AdministratorRoleName;
+            yield return UserRoleName;
         }
     }
 }

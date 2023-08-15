@@ -68,5 +68,17 @@ namespace IdentityServer.Controllers
         {
             return View(registerViewModel);
         }
+
+        [Route("[action]")]
+        public async Task<IActionResult> Logout(string logoutId)
+        {
+            await _signInManager.SignOutAsync();
+            var logoutResult = await _interaction.GetLogoutContextAsync(logoutId);
+
+            if (string.IsNullOrEmpty(logoutResult.PostLogoutRedirectUri))
+                return RedirectToAction("Login", "Account");
+
+            return Redirect(logoutResult.PostLogoutRedirectUri);
+        }
     }
 }
