@@ -1,4 +1,3 @@
-using IdentityServer;
 using IdentityServer.Data;
 using IdentityServer.Data.Base;
 using IdentityServer.Data.DatabaseInitializer;
@@ -13,7 +12,7 @@ builder.Services.AddCors();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
     {
-        options.UseInMemoryDatabase("MEMORY");
+        options.UseSqlServer(connectionString);
     })
     .AddIdentity<ApplicationUser, ApplicationRole>(config => 
     {
@@ -29,23 +28,23 @@ builder.Services.AddIdentityServer(config =>
     config.UserInteraction.LoginUrl = "/Account/Login";
 })
     .AddAspNetIdentity<ApplicationUser>()
-    //.AddConfigurationStore(options =>
-    //{
-    //    options.ConfigureDbContext =
-    //        b => b.UseSqlServer(connectionString,
-    //            sql => sql.MigrationsAssembly(migrationAssembly));
+    .AddConfigurationStore(options =>
+    {
+        options.ConfigureDbContext =
+            b => b.UseSqlServer(connectionString,
+                sql => sql.MigrationsAssembly(migrationAssembly));
 
-    //})
-    //.AddOperationalStore(options =>
-    //{
-    //    options.ConfigureDbContext =
-    //        b => b.UseSqlServer(connectionString,
-    //            sql => sql.MigrationsAssembly(migrationAssembly));
-    //})
-    .AddInMemoryApiResources(Configuration.GetApiResources())
-    .AddInMemoryClients(Configuration.GetClients())
-    .AddInMemoryIdentityResources(Configuration.GetIdentityResources())
-    .AddInMemoryApiScopes(Configuration.GetApiScopes())
+    })
+    .AddOperationalStore(options =>
+    {
+        options.ConfigureDbContext =
+            b => b.UseSqlServer(connectionString,
+                sql => sql.MigrationsAssembly(migrationAssembly));
+    })
+    //.AddInMemoryApiResources(Configuration.GetApiResources())
+    //.AddInMemoryClients(Configuration.GetClients())
+    //.AddInMemoryIdentityResources(Configuration.GetIdentityResources())
+    //.AddInMemoryApiScopes(Configuration.GetApiScopes())
     .AddDeveloperSigningCredential();
 
 builder.Services.ConfigureApplicationCookie(config => 
@@ -53,7 +52,6 @@ builder.Services.ConfigureApplicationCookie(config =>
     config.LoginPath = "/Account/Login";
     config.LogoutPath = "/Account/Logout";
 });
-
 
 builder.Services.AddControllersWithViews();
 
@@ -71,7 +69,6 @@ app.UseCors(builder =>
 });
 
 app.UseIdentityServer();
-
 
 app.MapControllers();
 

@@ -1,5 +1,8 @@
 ﻿using IdentityServer.Data.Base;
+using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityServer.Data.DatabaseInitializer;
 
@@ -51,10 +54,43 @@ public static  class DatabaseInitializer
                 var roleAdded = await userManager.AddToRoleAsync(developer, role);
                 if (roleAdded.Succeeded)
                     await context.SaveChangesAsync();
-
             }
         }
         
         await context.SaveChangesAsync();
+        
+        /// for IdentityServer
+
+        scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+
+        var configurationContext = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+        configurationContext.Database.Migrate();
+
+        if (!configurationContext.Clients.Any())
+        {
+            foreach (var client in Configuration.GetClients())
+            {
+                configurationContext.Clients.Add(client.ToEntity());
+            }
+            configurationContext.SaveChanges();
+        }
+
+        if (!configurationContext.IdentityResources.Any())
+        {
+            foreach (var resource in Configuration.GetIdentityResources())
+            {
+                configurationContext.IdentityResources.Add(resource.ToEntity());
+            }
+            configurationContext.SaveChanges();
+        }
+
+        if (!configurationContext.ApiScopes.Any())
+        {
+            foreach (var resource in Configuration.GetApiScopes())
+            {
+                configurationContext.ApiScopes.Add(resource.ToEntity());
+            }
+            configurationContext.SaveChanges();
+        }
     }
 }
