@@ -9,6 +9,11 @@
             </div>
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                 <form asp-controller="Account" asp-action="Login" method="post">
+
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <input type="hidden" asp-for="ReturnUrl"/>
+
                     <!-- Email input -->
                     <div class="form-outline mb-4">
                         <input asp-for="Email" class="form-control form-control-lg"
@@ -28,7 +33,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <!-- Checkbox -->
                         <div class="form-check mb-0">
-                            <input asp-for="RememberMe" class="form-check-input me-2" type="checkbox" value="false"/>
+                            <input asp-for="RememberMe" class="form-check-input me-2" type="checkbox" />
                             <label asp-for="RememberMe" class="form-check-label">
                                 Remember me
                             </label>
@@ -37,7 +42,7 @@
                     </div>
 
                     <div class="text-center text-lg-start mt-4 pt-2">
-                        <button type="button" class="btn btn-primary btn-lg"
+                        <button type="submit" class="btn btn-primary btn-lg"
                                 style="padding-left: 2.5rem; padding-right: 2.5rem;">
                             Login
                         </button>

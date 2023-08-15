@@ -14,6 +14,7 @@ namespace IdentityServer.Models
 
         public bool RememberMe { get; set; }
 
-        public string? ReturnUrl { get; set; }
+        [Required]
+        public string ReturnUrl { get; set; }
     }
 }
