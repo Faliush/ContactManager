@@ -12,6 +12,10 @@ public class RegisterViewModel
     public string Email { get; set; } = null!;
 
     [Required]
+    [Phone]
+    public string Phone { get; set; } = null!;
+
+    [Required]
     [DataType(DataType.Password)]
     public string Password { get; set; } = null!;
 
@@ -22,4 +26,7 @@ public class RegisterViewModel
 
     [Required]
     public bool AgreeWithPolitics { get; set; }
+
+    [Required]
+    public string ReturnUrl { get; set; }
 }
