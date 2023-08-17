@@ -11,7 +11,6 @@
                 <form asp-controller="Account" asp-action="Login" method="post">
 
                     <div asp-validation-summary="All" class="text-danger"></div>
-
                     <input type="hidden" asp-for="ReturnUrl"/>
 
                     <!-- Email input -->
@@ -48,7 +47,7 @@
                         </button>
                         <p class="small fw-bold mt-2 pt-1 mb-0">
                             Don't have an account? <a asp-controller="Account" asp-action="Register"
-                                                      class="link-danger">Register</a>
+                                                      class=" link-danger" asp-route-ReturnUrl="@Model.ReturnUrl" > Register </a>
                         </p>
                     </div>
 
