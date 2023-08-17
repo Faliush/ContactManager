@@ -3,6 +3,7 @@ using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace IdentityServer.Data.DatabaseInitializer;
 
@@ -18,13 +19,12 @@ public static  class DatabaseInitializer
 
         var roles = AppData.Roles.ToList();
 
-        foreach ( var role in roles )
-        {
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-
-            if(!context!.Roles.Any(r => r.Name == role))
-                await roleManager.CreateAsync(new ApplicationRole() { Name = role, NormalizedName = role.ToUpper() });
-        }
+        //foreach (var role in roles)
+        //{
+        //    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        //    if (!context!.Roles.Any(r => r.Name == role))
+        //        await roleManager.CreateAsync(new ApplicationRole() { Name = role, NormalizedName = role.ToUpper() });
+        //}
 
         var developer = new ApplicationUser()
         {
@@ -35,6 +35,13 @@ public static  class DatabaseInitializer
             PhoneNumber = "+380000000000",
             EmailConfirmed = true,
             PhoneNumberConfirmed = true
+        };
+
+        var claimList = new List<Claim>()
+        {
+            new Claim(ClaimTypes.Name, developer.UserName),
+            new Claim(ClaimTypes.Email, developer.Email),
+            new Claim(ClaimTypes.NameIdentifier, developer.Email),
         };
 
         if(!context!.Users.Any(u => u.Email == developer.Email))
@@ -49,11 +56,11 @@ public static  class DatabaseInitializer
                 throw new InvalidOperationException("Cannot create account");
 
             foreach(var role in roles)
-            {
-                var roleAdded = await userManager.AddToRoleAsync(developer, role);
-                if (roleAdded.Succeeded)
-                    await context.SaveChangesAsync();
-            }
+                claimList.Add(new Claim(ClaimTypes.Role, role));
+            
+            var claimsAdded = await userManager.AddClaimsAsync(developer, claimList);
+            if (claimsAdded.Succeeded)
+                await context.SaveChangesAsync();
         }
         
         await context.SaveChangesAsync();
