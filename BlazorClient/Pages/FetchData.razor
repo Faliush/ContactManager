@@ -1,43 +1,47 @@
 ﻿@page "/fetchdata"
 @inject HttpClient Http
-@attribute [Authorize]
+@attribute [Authorize(Policy = "AdministratorPage")]
 
-<PageTitle>Weather forecast</PageTitle>
 
-<h1>Weather forecast</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
+    <PageTitle>Weather forecast</PageTitle>
 
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
+    <h1>Weather forecast</h1>
+
+    <p>This component demonstrates fetching data from the server.</p>
+
+    @if (forecasts == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
+                    <th>Date</th>
+                    <th>Temp. (C)</th>
+                    <th>Temp. (F)</th>
+                    <th>Summary</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
+            </thead>
+            <tbody>
+                @foreach (var forecast in forecasts)
+                {
+                    <tr>
+                        <td>@forecast.Date.ToShortDateString()</td>
+                        <td>@forecast.TemperatureC</td>
+                        <td>@forecast.TemperatureF</td>
+                        <td>@forecast.Summary</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
 
 @code {
+
     private WeatherForecast[]? forecasts;
 
     protected override async Task OnInitializedAsync()
