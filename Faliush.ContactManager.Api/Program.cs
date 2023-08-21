@@ -1,7 +1,12 @@
+using Faliush.ContactManager.Api.Definitions.Base;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+///
+builder.AddDefinition(typeof(Program));
+///
 
 builder.Services.AddCors();
 
@@ -22,6 +27,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+///
+app.UseDefinition();
+///
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
