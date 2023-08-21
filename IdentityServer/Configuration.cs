@@ -21,13 +21,14 @@ public static class Configuration
                     IdentityServerConstants.StandardScopes.Profile
                 },
 
-                    RedirectUris = { "https://localhost:7001/authentication/login-callback"},
-                    PostLogoutRedirectUris = { "https://localhost:7001/authentication/logout-callback"},
+
+                RedirectUris = { "https://localhost:7001/authentication/login-callback"},
+                PostLogoutRedirectUris = { "https://localhost:7001/authentication/logout-callback"},
                     
-                    RequireConsent = false,
-                    RequireClientSecret= false,
-                    RequirePkce = true,
-                    AllowOfflineAccess = true,
+                RequireConsent = false,
+                RequireClientSecret= false,
+                RequirePkce = true,
+                AllowOfflineAccess = true,
 
                 AllowedCorsOrigins = { "https://localhost:7001" }
             }
@@ -36,7 +37,7 @@ public static class Configuration
     public static IEnumerable<ApiScope> GetApiScopes() =>
         new List<ApiScope>
         {
-            new ApiScope("ContactAPI")
+            new ApiScope("ContactAPI", "Contact API")
         };
 
     public static IEnumerable<ApiResource> GetApiResources() =>

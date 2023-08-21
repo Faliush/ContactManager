@@ -10,6 +10,15 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+builder.Services.AddScoped<CustomAuthorizationMessageHandler>();
+builder.Services.AddHttpClient("ContactAPI", cl =>
+{
+    cl.BaseAddress = new Uri("https://localhost:5001/api/");
+})
+.AddHttpMessageHandler<CustomAuthorizationMessageHandler>();
+builder.Services.AddScoped(
+   sp => sp.GetService<IHttpClientFactory>().CreateClient("ContactAPI"));
+
 builder.Services.AddOidcAuthentication(options =>
 {
     options.ProviderOptions.ClientId = "blazor_client";
