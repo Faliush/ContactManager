@@ -2,7 +2,7 @@
 
 namespace Faliush.ContactManager.Models;
 
-public class Country : Auditable
+public class Country : Identity
 {
     public string Name { get; set; } = null!;
     public List<Person>? People { get; set; }
