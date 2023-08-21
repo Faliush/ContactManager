@@ -12,5 +12,5 @@ public class Person : Auditable
     public string? Address { get; set; }
 
     public Guid? CountryId { get; set; }
-    public Country? Country { get; set; }
+    public virtual Country? Country { get; set; }
 }
