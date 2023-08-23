@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Faliush.ContactManager.Core.Test.Queries;
+namespace Faliush.ContactManager.Core.Logic.Test.Queries;
 
 public record SecretGetRequest() : IRequest<string>;
 
