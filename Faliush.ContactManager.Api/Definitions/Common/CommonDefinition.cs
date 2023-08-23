@@ -6,11 +6,19 @@ public class CommonDefinition : AppDefinition
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
-        builder.Services.AddControllers();
+        builder.Services.AddLocalization();
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddResponseCaching();
+        builder.Services.AddMemoryCache();
+
+        builder.Services.AddMvc();
+        builder.Services.AddRazorPages();
     }
 
     public override void ConfigureApplication(WebApplication app)
     {
-        app.MapControllers();
+        app.UseHttpsRedirection();
+        app.MapRazorPages();
+        app.MapDefaultControllerRoute();
     }
 }
