@@ -6,7 +6,7 @@ namespace Faliush.ContactManager.Infrastructure;
 
 public class ApplicationDbContext : DbContextBase
 {
-    public ApplicationDbContext(DbContextOptions<DbContextBase> options) : base(options)  {  }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)  {  }
 
     public virtual DbSet<Person> People { get; set; }
     public virtual DbSet<Country> Countries { get; set; }
