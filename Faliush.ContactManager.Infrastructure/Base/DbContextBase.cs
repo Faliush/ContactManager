@@ -1,4 +1,5 @@
-﻿using Faliush.ContactManager.Models.Base;
+﻿using Faliush.ContactManager.Infrastructure.UnitOfWork;
+using Faliush.ContactManager.Models.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -8,8 +9,10 @@ public abstract class DbContextBase : DbContext
 {
 	private const string DefaultUserName = "Anonymous";
 	private readonly DateTime DefaultDate = DateTime.UtcNow.ToUniversalTime();
+    public SaveChangesResult LastSaveChangesResult { get; }
 	
-	public DbContextBase(DbContextOptions options) : base(options) { }
+	public DbContextBase(DbContextOptions options) : base(options) =>
+        LastSaveChangesResult = new SaveChangesResult();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,23 +35,55 @@ public abstract class DbContextBase : DbContext
 
     public override int SaveChanges()
     {
-        DbSaveChanges();
-        return base.SaveChanges();
+        try
+        {
+            DbSaveChanges();
+            return base.SaveChanges();
+        }
+        catch(Exception exception) 
+        {
+            LastSaveChangesResult.Exception = exception;
+            return 0;
+        }
     }
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
-        DbSaveChanges();
-        return base.SaveChanges(acceptAllChangesOnSuccess);
+        try
+        {
+            DbSaveChanges();
+            return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+        catch(Exception exception) 
+        {
+            LastSaveChangesResult.Exception = exception;
+            return 0;
+        }
     }
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        DbSaveChanges();
-        return base.SaveChangesAsync(cancellationToken);
+        try
+        {
+            DbSaveChanges();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+        catch(Exception exception) 
+        {
+            LastSaveChangesResult.Exception = exception;
+            return Task.FromResult(0);
+        }
     }
     public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {
-        DbSaveChanges();
-        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        try
+        {
+            DbSaveChanges();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+        catch(Exception exception)
+        {
+            LastSaveChangesResult.Exception = exception;
+            return Task.FromResult(0);
+        }
     }
 
 	private void DbSaveChanges()
@@ -96,6 +131,8 @@ public abstract class DbContextBase : DbContext
             {
                 entry.Property(nameof(IAudetable.UpdatedAt)).CurrentValue = DefaultDate;
             }
+
+            LastSaveChangesResult.AddMessage($"ChangeTracker has new entities: {entry.Entity.GetType()}");
         }
 
         var modifiedEntries = ChangeTracker.Entries().Where(x => x.State == EntityState.Modified);
@@ -110,6 +147,8 @@ public abstract class DbContextBase : DbContext
                 : entry.Property(nameof(IAudetable.UpdatedBy)).CurrentValue;
             var updatedAt = entry.Property(nameof(IAudetable.UpdatedAt)).CurrentValue = DefaultDate;
             var updatedBy = entry.Property(nameof(IAudetable.UpdatedBy)).CurrentValue = userName;
+
+            LastSaveChangesResult.AddMessage($"ChangeTracker has modified entities: {entry.Entity.GetType()}");
         }
 	}
 }
