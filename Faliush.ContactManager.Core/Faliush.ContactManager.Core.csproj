@@ -7,13 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="FluentValidation" Version="11.7.1" />
     <PackageReference Include="MediatR" Version="12.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Test\Validation\" />
-    <Folder Include="Test\ViewModels\" />
+    <Folder Include="Mappers\" />
+    <Folder Include="Logic\Test\Validation\" />
+    <Folder Include="Logic\Test\ViewModels\" />
   </ItemGroup>
 
 </Project>
