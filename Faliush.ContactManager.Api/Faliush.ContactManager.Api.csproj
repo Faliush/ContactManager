@@ -9,6 +9,15 @@
   <ItemGroup>
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.21">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Faliush.ContactManager.Core\Faliush.ContactManager.Core.csproj" />
+    <ProjectReference Include="..\Faliush.ContactManager.Infrastructure\Faliush.ContactManager.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

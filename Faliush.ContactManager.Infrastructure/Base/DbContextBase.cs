@@ -9,7 +9,7 @@ public abstract class DbContextBase : DbContext
 	private const string DefaultUserName = "Anonymous";
 	private readonly DateTime DefaultDate = DateTime.UtcNow.ToUniversalTime();
 	
-	public DbContextBase(DbContextOptions<DbContextBase> options) : base(options) { }
+	public DbContextBase(DbContextOptions options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
