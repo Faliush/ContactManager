@@ -2,7 +2,7 @@
 
 namespace Faliush.ContactManager.Infrastructure.UnitOfWork;
 
-public sealed class UnitOfWork<TContext> : IUnitOfWork<TContext>
+public sealed class UnitOfWork<TContext> : IUnitOfWork<TContext>, IRepositoryFactory
     where TContext : DbContext
 {
     private Dictionary<Type, object> _repositories;

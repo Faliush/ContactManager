@@ -1,12 +1,17 @@
-﻿namespace Faliush.ContactManager.Infrastructure.UnitOfWork;
+﻿using Microsoft.EntityFrameworkCore;
 
-public interface IUnitOfWork<out TContext> : IDisposable
+namespace Faliush.ContactManager.Infrastructure.UnitOfWork;
+
+public interface IUnitOfWork<out TContext> : IUnitOfWork where TContext : DbContext
 {
     /// <summary>
     /// 
     /// </summary>
     TContext DbContext { get; }
+}
 
+public interface IUnitOfWork : IDisposable 
+{
     /// <summary>
     /// 
     /// </summary>
@@ -28,3 +33,4 @@ public interface IUnitOfWork<out TContext> : IDisposable
 
     SaveChangesResult LastSaveChangeResult { get; }
 }
+
