@@ -1,5 +1,5 @@
 ﻿using Faliush.ContactManager.Api.Definitions.Base;
-using Faliush.ContactManager.Core.Test.Queries;
+using Faliush.ContactManager.Core.Logic.Test.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 

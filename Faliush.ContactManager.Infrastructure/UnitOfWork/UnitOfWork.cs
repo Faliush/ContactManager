@@ -8,8 +8,11 @@ public sealed class UnitOfWork<TContext> : IUnitOfWork<TContext>, IRepositoryFac
     private Dictionary<Type, object> _repositories;
     private bool _disposed;
 
-    public UnitOfWork(TContext context) =>
+    public UnitOfWork(TContext context)
+    {
         DbContext = context ?? throw new ArgumentNullException(nameof(context));
+        LastSaveChangeResult = new SaveChangesResult();
+    }
 
     public TContext DbContext { get; }
 

@@ -13,9 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Mappers\" />
     <Folder Include="Logic\Test\Validation\" />
     <Folder Include="Logic\Test\ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Faliush.ContactManager.Infrastructure\Faliush.ContactManager.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
