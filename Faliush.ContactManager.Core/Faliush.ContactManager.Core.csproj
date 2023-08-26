@@ -21,4 +21,9 @@
     <ProjectReference Include="..\Faliush.ContactManager.Infrastructure\Faliush.ContactManager.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Logic\PersonLogic\Validators\" />
+    <Folder Include="Logic\PersonLogic\Queries\" />
+  </ItemGroup>
+
 </Project>

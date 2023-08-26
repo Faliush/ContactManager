@@ -1,5 +1,6 @@
 ﻿using Faliush.ContactManager.Api.Definitions.Base;
 using Faliush.ContactManager.Core.Enums;
+using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using MediatR;
 
 namespace Faliush.ContactManager.Api.Endpoints.PersonEndpoints;
