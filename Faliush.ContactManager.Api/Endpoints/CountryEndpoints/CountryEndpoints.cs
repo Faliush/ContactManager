@@ -9,11 +9,11 @@ public class CountryEndpoints : AppDefinition
 {
     public override void ConfigureApplication(WebApplication app)
     {
-        app.MapGet("api/country/get-all", GetAllCountries);
-        app.MapPost("api/country/create", CreateCountry);
-        app.MapDelete("api/country/delete/{id:guid}", DeleteCountry);
-        app.MapGet("api/country/update/{id:guid}", GetForUpdateCountry);
-        app.MapPut("api/country/update", PutAfterUpdateCountry);
+        app.MapGet("api/countries", GetAllCountries);
+        app.MapPost("api/countries", CreateCountry);
+        app.MapDelete("api/countries/{id:guid}", DeleteCountry);
+        app.MapGet("api/countries/update/{id:guid}", GetForUpdateCountry);
+        app.MapPut("api/countries", PutAfterUpdateCountry);
     }
 
     private async Task<List<CountryViewModel>> GetAllCountries(IMediator mediator, HttpContext context) =>
