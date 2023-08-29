@@ -15,15 +15,12 @@
     <PackageReference Include="Calabonga.PredicatesBuilder" Version="2.0.1" />
     <PackageReference Include="FluentValidation" Version="11.7.1" />
     <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="6.0.21" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Faliush.ContactManager.Infrastructure\Faliush.ContactManager.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Logic\PersonLogic\Validators\" />
-    <Folder Include="Logic\PersonLogic\Queries\" />
   </ItemGroup>
 
 </Project>
