@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
@@ -22,6 +23,16 @@ public interface IRepository<TEntity> where TEntity : class
         bool ignoreQueryFilters = false,
         bool ignoreAutoInclude = false);
 
+    IPagedList<TEntity> GetPagedList(
+        Expression<Func<TEntity, bool>>? predicate = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
+        int pageIndex = 0,
+        int pageSize = 20,
+        bool disableTracking = false,
+        bool ignoreQueryFilters = false,
+        bool ignoreAutoInclude = false);
+
     /// <summary>
     /// 
     /// </summary>
@@ -34,6 +45,16 @@ public interface IRepository<TEntity> where TEntity : class
         Expression<Func<TEntity, bool>>? predicate = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
+        bool disableTracking = false,
+        bool ignoreQueryFilters = false,
+        bool ignoreAutoInclude = false);
+
+    Task<IPagedList<TEntity>> GetPagedListAsync(
+        Expression<Func<TEntity, bool>>? predicate = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
+        int pageIndex = 0,
+        int pageSize = 20,
         bool disableTracking = false,
         bool ignoreQueryFilters = false,
         bool ignoreAutoInclude = false);
