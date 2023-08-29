@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Faliush.ContactManager.Core.Common.Mapping;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
+using Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
 using Faliush.ContactManager.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -63,5 +65,8 @@ public class PersonMapperConfiguration : Profile
             .ForMember(x => x.UpdatedBy, o => o.MapFrom((_,_,_,context) => context.Items[nameof(IdentityUser)]))
             .ForMember(x => x.CreatedBy, o => o.Ignore());
 
+
+		CreateMap<IPagedList<Person>, IPagedList<PeopleViewModel>>()
+			.ConvertUsing<PagedListConverter<Person, PeopleViewModel>>();
     }
 }
