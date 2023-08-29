@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
 
 namespace Faliush.ContactManager.Infrastructure.UnitOfWork;
 
@@ -72,6 +73,39 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
             : query;
     }
 
+    public IPagedList<TEntity> GetPagedList(
+        Expression<Func<TEntity,bool>>? predicate = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
+        int pageIndex = 0,
+        int pageSize = 20,
+        bool disableTracking = false,
+        bool ignoreQueryFilters = false,
+        bool ignoreAutoInclude = false
+        )
+    {
+        IQueryable<TEntity> query = _dbSet;
+
+        if (disableTracking)
+            query = query.AsNoTracking();
+
+        if (ignoreQueryFilters)
+            query = query.IgnoreQueryFilters();
+
+        if (ignoreAutoInclude)
+            query = query.IgnoreAutoIncludes();
+
+        if (predicate is not null)
+            query = query.Where(predicate);
+
+        if (include is not null)
+            query = include(query);
+
+        return orderBy is not null
+            ? orderBy(query).ToPagedList(pageIndex, pageSize)
+            : query.ToPagedList(pageIndex, pageSize);
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -108,6 +142,38 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
         return orderBy is not null
             ? await orderBy(query).ToListAsync()
             : await query.ToListAsync();
+    }
+
+    public async Task<IPagedList<TEntity>> GetPagedListAsync(
+        Expression<Func<TEntity, bool>>? predicate = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? = null,
+        int pageIndex = 0,
+        int pageSize = 20,
+        bool disableTracking = false,
+        bool ignoreQueryFilters = false,
+        bool ignoreAutoInclude = false)
+    {
+        IQueryable<TEntity> query = _dbSet;
+
+        if (disableTracking)
+            query = query.AsNoTracking();
+
+        if (ignoreQueryFilters)
+            query = query.IgnoreQueryFilters();
+
+        if (ignoreAutoInclude)
+            query = query.IgnoreAutoIncludes();
+
+        if (predicate is not null)
+            query = query.Where(predicate);
+
+        if (include is not null)
+            query = include(query);
+
+        return orderBy is not null
+            ? await orderBy(query).ToPagedListAsync(pageIndex, pageSize)
+            : await query.ToPagedListAsync(pageIndex, pageSize)
     }
 
     /// <summary>
