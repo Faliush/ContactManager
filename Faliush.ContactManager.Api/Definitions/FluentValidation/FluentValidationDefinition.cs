@@ -13,6 +13,6 @@ public class FluentValidationDefinition : AppDefinition
             option.SuppressModelStateInvalidFilter = true;
         });
 
-        builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+        builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
     }
 }
