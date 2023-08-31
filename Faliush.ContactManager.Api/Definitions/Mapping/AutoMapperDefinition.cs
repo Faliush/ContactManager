@@ -7,7 +7,7 @@ public class AutoMapperDefinition : AppDefinition
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
-        builder.Services.AddAutoMapper(typeof(CountryMapperConfiguration));
+        builder.Services.AddAutoMapper(typeof(CountryMapperConfiguration), typeof(PersonMapperConfiguration));
     }
 
     public override void ConfigureApplication(WebApplication app)

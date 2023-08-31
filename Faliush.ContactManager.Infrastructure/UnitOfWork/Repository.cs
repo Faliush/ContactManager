@@ -147,7 +147,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     public async Task<IPagedList<TEntity>> GetPagedListAsync(
         Expression<Func<TEntity, bool>>? predicate = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? = null,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
         int pageIndex = 0,
         int pageSize = 20,
         bool disableTracking = false,
@@ -173,7 +173,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 
         return orderBy is not null
             ? await orderBy(query).ToPagedListAsync(pageIndex, pageSize)
-            : await query.ToPagedListAsync(pageIndex, pageSize)
+            : await query.ToPagedListAsync(pageIndex, pageSize);
     }
 
     /// <summary>

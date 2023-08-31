@@ -17,7 +17,9 @@ public abstract class DbContextBase : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+
+        //builder.ApplyConfigurationsFromAssembly(typeof(Program).Assembly);
+
         var applyGenericMethod = typeof(ModelBuilder).GetMethods(BindingFlags.Instance | BindingFlags.Public).First(x => x.Name == "ApplyConfiguration");
         foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(c => c.IsClass && !c.IsAbstract && !c.ContainsGenericParameters))
         {
@@ -92,7 +94,7 @@ public abstract class DbContextBase : DbContext
 
 		foreach(var entry in addedEntries)
 		{
-			if (entry is not IAudetable)
+			if (entry.Entity is not IAudetable)
 				continue;
 
             var createdAt = entry.Property(nameof(IAudetable.CreatedAt)).CurrentValue;
@@ -139,7 +141,7 @@ public abstract class DbContextBase : DbContext
 
         foreach(var entry in modifiedEntries)
         {
-            if (entry is not IAudetable)
+            if (entry.Entity is not IAudetable)
                 continue;
 
             var userName = entry.Property(nameof(IAudetable.UpdatedBy)).CurrentValue == null
