@@ -1,6 +1,7 @@
 ﻿using Faliush.ContactManager.Api.Definitions.Base;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace Faliush.ContactManager.Api.Definitions.Identity;
 
@@ -20,7 +21,13 @@ public class AuthorizationDefinition : AppDefinition
                 config.Audience = "https://localhost:10001";
             });
 
-        builder.Services.AddAuthorization(); ;
+        builder.Services.AddAuthorization(config => 
+        {
+            config.AddPolicy("Administrator", builder =>
+            {
+                builder.RequireClaim(ClaimTypes.Role, "Administrator");
+            });
+        }); ;
     }
 
     public override void ConfigureApplication(WebApplication app)

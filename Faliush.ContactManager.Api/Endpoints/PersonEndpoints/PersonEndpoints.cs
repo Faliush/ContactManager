@@ -3,6 +3,7 @@ using Faliush.ContactManager.Core.Logic.PersonLogic.Queries;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Faliush.ContactManager.Api.Endpoints.PersonEndpoints;
 
@@ -49,22 +50,28 @@ public class PersonEndpoints : AppDefinition
                 searchString, 
                 sortBy, 
                 sortOrder), context.RequestAborted);
-
+    
+    [Authorize]
     private async Task<PersonViewModel> GetPersonById(Guid id, IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonGetByIdRequest(id), context.RequestAborted);
 
+    [Authorize]
     private async Task<PersonCreateViewModel> GetForCreate(IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonGetForCreateRequest(), context.RequestAborted);
 
+    [Authorize]
     private async Task<PersonViewModel> CreatePerson(PersonCreateViewModel viewModel, IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonCreateRequest(viewModel, context.User), context.RequestAborted);
 
+    [Authorize]
     private async Task<Guid> DeletePerson(Guid id, IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonDeleteRequest(id), context.RequestAborted);
 
+    [Authorize]
     private async Task<PersonUpdateViewModel> GetPersonForUpdate(Guid id, IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonGetForUpdateRequest(id), context.RequestAborted);
 
+    [Authorize]
     private async Task<PersonViewModel> PutAfterUpdatePerson(PersonUpdateViewModel viewModel, IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonUpdateRequest(viewModel, context.User), context.RequestAborted);
 }
