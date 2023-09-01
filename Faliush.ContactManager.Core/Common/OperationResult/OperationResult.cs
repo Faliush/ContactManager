@@ -2,6 +2,7 @@
 
 namespace Faliush.ContactManager.Core.Common.OperationResult;
 
+[Serializable]
 public abstract class OperationResultBase
 {
     public Metadata? Metadata { get; set; }
@@ -17,7 +18,7 @@ public abstract class OperationResultBase
         return operation;
     }
 
-    public static OperationResult<TResult> CreateResult<TResult>() => CreateResult(default(TResult));
+    public static OperationResult<TResult> CreateResult<TResult>() => CreateResult(default(TResult)!);
 }
 
 [Serializable]

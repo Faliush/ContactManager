@@ -26,6 +26,16 @@ public class Metadata : IMetadataMessage
 
     public void AddData(object data)
     {
-        throw new NotImplementedException();
+        if (_source is null)
+            return;
+
+        if(data is Exception exception && _source.Metadata is null)
+        {
+            _source.Metadata = new Metadata(_source, exception.Message);
+            return;
+        }
+
+        if (_source.Metadata is not null)
+            _source.Metadata.DataObject = data;
     }
 }
