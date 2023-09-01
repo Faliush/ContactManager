@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Exceptions;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using Faliush.ContactManager.Core.Services;
@@ -11,9 +12,9 @@ using System.Security.Claims;
 
 namespace Faliush.ContactManager.Core.Logic.PersonLogic.Queries;
 
-public record PersonCreateRequest(PersonCreateViewModel Model, ClaimsPrincipal User) : IRequest<PersonViewModel>;
+public record PersonCreateRequest(PersonCreateViewModel Model, ClaimsPrincipal User) : IRequest<OperationResult<PersonViewModel>>;
 
-public class PersonCreateRequestHandler : IRequestHandler<PersonCreateRequest, PersonViewModel>
+public class PersonCreateRequestHandler : IRequestHandler<PersonCreateRequest, OperationResult<PersonViewModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -32,8 +33,9 @@ public class PersonCreateRequestHandler : IRequestHandler<PersonCreateRequest, P
         _dateCalcualtorService = dateCalcualtorService;
     }
 
-    public async Task<PersonViewModel> Handle(PersonCreateRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<PersonViewModel>> Handle(PersonCreateRequest request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult<PersonViewModel>();
         var repository = _unitOfWork.GetRepository<Person>();
 
         var entity = _mapper.Map<Person>(request.Model, x => x.Items[nameof(IdentityUser)] = request.User.Identity!.Name);
@@ -46,19 +48,28 @@ public class PersonCreateRequestHandler : IRequestHandler<PersonCreateRequest, P
             );
 
         if (country is null)
-            throw new ContactManagerNotFoundException($"country with id {request.Model.CountryId} doesn't exist");
+        {
+            operation.AddError(new ContactManagerNotFoundException($"country with id {request.Model.CountryId} doesn't exist"));
+            return operation;
+        }
 
         await repository.InsertAsync(entity, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
 
         if (!_unitOfWork.LastSaveChangeResult.IsOk)
-            throw new ContactManagerSaveDatabaseException();
+        {
+            var exception = _unitOfWork.LastSaveChangeResult.Exception ?? new ContactManagerSaveDatabaseException();
+            operation.AddError(exception);
+            return operation;
+        }
 
         var result = _mapper.Map<PersonViewModel>(entity);
         result.Age = _dateCalcualtorService.GetTotalYears(result.DateOfBirth);
         result.CountryName = country.Name;
 
-        return result;
+        operation.Result = result;
+
+        return operation;
 
     }
 }

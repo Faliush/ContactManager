@@ -1,4 +1,5 @@
 ﻿using Faliush.ContactManager.Api.Definitions.Base;
+using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Logic.PersonLogic.Queries;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
@@ -22,10 +23,10 @@ public class PersonEndpoints : AppDefinition
         app.MapGet("api/people/filtered/{pageIndex:int}", GetFilteredPagedPeople);
     }
 
-    private async Task<List<PeopleViewModel>> GetAllPeople(IMediator mediator, HttpContext context) =>
+    private async Task<OperationResult<List<PeopleViewModel>>> GetAllPeople(IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonGetAllRequest(), context.RequestAborted);
 
-    private async Task<List<PeopleViewModel>> GetFilteredPeople(
+    private async Task<OperationResult<List<PeopleViewModel>>> GetFilteredPeople(
         IMediator mediator,
         HttpContext context,
         string? searchBy,
@@ -34,7 +35,7 @@ public class PersonEndpoints : AppDefinition
         string sortOrder = "Asc") =>
             await mediator.Send(new PersonGetFilteredRequest(searchBy, searchString, sortBy, sortOrder), context.RequestAborted);
 
-    private async Task<IPagedList<PeopleViewModel>> GetFilteredPagedPeople(
+    private async Task<OperationResult<IPagedList<PeopleViewModel>>> GetFilteredPagedPeople(
         IMediator mediator,
         IConfiguration configuration,
         HttpContext context,
@@ -52,26 +53,26 @@ public class PersonEndpoints : AppDefinition
                 sortOrder), context.RequestAborted);
     
     [Authorize]
-    private async Task<PersonViewModel> GetPersonById(Guid id, IMediator mediator, HttpContext context) =>
+    private async Task<OperationResult<PersonViewModel>> GetPersonById(Guid id, IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonGetByIdRequest(id), context.RequestAborted);
 
     [Authorize]
-    private async Task<PersonCreateViewModel> GetForCreate(IMediator mediator, HttpContext context) =>
+    private async Task<OperationResult<PersonCreateViewModel>> GetForCreate(IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonGetForCreateRequest(), context.RequestAborted);
 
     [Authorize]
-    private async Task<PersonViewModel> CreatePerson(PersonCreateViewModel viewModel, IMediator mediator, HttpContext context) =>
+    private async Task<OperationResult<PersonViewModel>> CreatePerson(PersonCreateViewModel viewModel, IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonCreateRequest(viewModel, context.User), context.RequestAborted);
 
     [Authorize]
-    private async Task<Guid> DeletePerson(Guid id, IMediator mediator, HttpContext context) =>
+    private async Task<OperationResult<Guid>> DeletePerson(Guid id, IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonDeleteRequest(id), context.RequestAborted);
 
     [Authorize]
-    private async Task<PersonUpdateViewModel> GetPersonForUpdate(Guid id, IMediator mediator, HttpContext context) =>
+    private async Task<OperationResult<PersonUpdateViewModel>> GetPersonForUpdate(Guid id, IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonGetForUpdateRequest(id), context.RequestAborted);
 
     [Authorize]
-    private async Task<PersonViewModel> PutAfterUpdatePerson(PersonUpdateViewModel viewModel, IMediator mediator, HttpContext context) =>
+    private async Task<OperationResult<PersonViewModel>> PutAfterUpdatePerson(PersonUpdateViewModel viewModel, IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonUpdateRequest(viewModel, context.User), context.RequestAborted);
 }

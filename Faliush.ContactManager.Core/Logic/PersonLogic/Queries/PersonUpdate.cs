@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Exceptions;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using Faliush.ContactManager.Core.Services;
@@ -11,9 +12,10 @@ using System.Security.Claims;
 
 namespace Faliush.ContactManager.Core.Logic.PersonLogic.Queries;
 
-public record PersonUpdateRequest(PersonUpdateViewModel Model, ClaimsPrincipal User) : IRequest<PersonViewModel>;
+public record PersonUpdateRequest(PersonUpdateViewModel Model, ClaimsPrincipal User) 
+    : IRequest<OperationResult<PersonViewModel>>;
 
-public class PersonUpdateRequestHandler : IRequestHandler<PersonUpdateRequest, PersonViewModel>
+public class PersonUpdateRequestHandler : IRequestHandler<PersonUpdateRequest, OperationResult<PersonViewModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -31,8 +33,9 @@ public class PersonUpdateRequestHandler : IRequestHandler<PersonUpdateRequest, P
         _dateCalcualtorService = dateCalcualtorService;
     }
 
-    public async Task<PersonViewModel> Handle(PersonUpdateRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<PersonViewModel>> Handle(PersonUpdateRequest request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult<PersonViewModel>();
         var repository = _unitOfWork.GetRepository<Person>();
 
         var entity = await repository
@@ -43,7 +46,10 @@ public class PersonUpdateRequestHandler : IRequestHandler<PersonUpdateRequest, P
             );
 
         if (entity is null)
-            throw new ContactManagerNotFoundException($"person with id: {request.Model.Id} not found");
+        {
+            operation.AddError(new ContactManagerNotFoundException($"person with id: {request.Model.Id} not found"));
+            return operation;
+        }
 
         var country = await _unitOfWork.GetRepository<Country>()
             .GetFirstOrDefaultAsync
@@ -52,7 +58,10 @@ public class PersonUpdateRequestHandler : IRequestHandler<PersonUpdateRequest, P
             );
 
         if (country is null)
-            throw new ContactManagerNotFoundException($"country with id {request.Model.CountryId} doesn't exist");
+        {
+            operation.AddError(new ContactManagerNotFoundException($"country with id {request.Model.CountryId} doesn't exist"));
+            return operation;
+        }
 
         _mapper.Map(request.Model, entity, x => x.Items[nameof(IdentityUser)] = request.User.Identity!.Name);
         entity.Gender = _stringConvertService.ConvertToEnum<GenderOptions>(request.Model.Gender);
@@ -61,12 +70,17 @@ public class PersonUpdateRequestHandler : IRequestHandler<PersonUpdateRequest, P
         await _unitOfWork.SaveChangesAsync();
 
         if (!_unitOfWork.LastSaveChangeResult.IsOk)
-            throw new ContactManagerSaveDatabaseException("database sasvin error", _unitOfWork.LastSaveChangeResult.Exception);
+        {
+            var exception = _unitOfWork.LastSaveChangeResult.Exception ?? new ContactManagerSaveDatabaseException();
+            operation.AddError(exception);
+            return operation;
+        }
 
         var result = _mapper.Map<PersonViewModel>(entity);
         result.Age = _dateCalcualtorService.GetTotalYears(entity.DateOfBirth);
         result.CountryName = country.Name;
 
-        return result;
+        operation.Result = result;
+        return operation;
     }
 }

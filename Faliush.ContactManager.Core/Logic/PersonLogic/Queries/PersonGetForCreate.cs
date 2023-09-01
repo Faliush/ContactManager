@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Exceptions;
 using Faliush.ContactManager.Core.Logic.CountryLogic.ViewModels;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
@@ -6,13 +7,12 @@ using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
 using Faliush.ContactManager.Models.Base;
 using MediatR;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Faliush.ContactManager.Core.Logic.PersonLogic.Queries;
 
-public record PersonGetForCreateRequest() : IRequest<PersonCreateViewModel>;
+public record PersonGetForCreateRequest() : IRequest<OperationResult<PersonCreateViewModel>>;
 
-public class PersonGetForCreateRequestHandler : IRequestHandler<PersonGetForCreateRequest, PersonCreateViewModel>
+public class PersonGetForCreateRequestHandler : IRequestHandler<PersonGetForCreateRequest, OperationResult<PersonCreateViewModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -23,8 +23,9 @@ public class PersonGetForCreateRequestHandler : IRequestHandler<PersonGetForCrea
         _mapper = mapper;
     }
     
-    public async Task<PersonCreateViewModel> Handle(PersonGetForCreateRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<PersonCreateViewModel>> Handle(PersonGetForCreateRequest request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult<PersonCreateViewModel>();
         var result = new PersonCreateViewModel();
 
         var items = await _unitOfWork.GetRepository<Country>()
@@ -34,12 +35,17 @@ public class PersonGetForCreateRequestHandler : IRequestHandler<PersonGetForCrea
             );
 
         if (items is null)
-            throw new ContactManagerNotFoundException("Doesn't contain any countries");
+        {
+            operation.AddError(new ContactManagerNotFoundException("Doesn't contain any countries"));
+            return operation;
+        }
 
         var countries = _mapper.Map<List<CountryViewModel>>(items.ToList());
         result.Countries = countries.ToList();
         result.Genders = Enum.GetNames<GenderOptions>().ToList();
 
-        return result;
+        operation.Result = result;
+
+        return operation;
     }
 }
