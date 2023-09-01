@@ -1,4 +1,5 @@
 ﻿using Faliush.ContactManager.Api.Definitions.Base;
+using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Logic.CountryLogic.Queries;
 using Faliush.ContactManager.Core.Logic.CountryLogic.ViewModels;
 using MediatR;
@@ -18,22 +19,22 @@ public class CountryEndpoints : AppDefinition
     }
 
     [Authorize(Policy = "Administrator")]
-    private async Task<List<CountryViewModel>> GetAllCountries(IMediator mediator, HttpContext context) =>
+    private async Task<OperationResult<List<CountryViewModel>>> GetAllCountries(IMediator mediator, HttpContext context) =>
         await mediator.Send(new CountryGetAllRequest(), context.RequestAborted);
 
     [Authorize(Policy = "Administrator")]
-    private async Task<CountryViewModel> CreateCountry(IMediator mediator, CountryCreateViewModel viewModel, HttpContext context) =>
+    private async Task<OperationResult<CountryViewModel>> CreateCountry(IMediator mediator, CountryCreateViewModel viewModel, HttpContext context) =>
         await mediator.Send(new CountryCreateRequest(viewModel), context.RequestAborted);
 
     [Authorize(Policy = "Administrator")]
-    private async Task<Guid> DeleteCountry(Guid id, IMediator mediator, HttpContext context) =>
+    private async Task<OperationResult<Guid>> DeleteCountry(Guid id, IMediator mediator, HttpContext context) =>
         await mediator.Send(new CountryDeleteRequest(id), context.RequestAborted);
 
     [Authorize(Policy = "Administrator")]
-    private async Task<CountryUpdateViewModel> GetForUpdateCountry(Guid id, IMediator mediator, HttpContext context) =>
+    private async Task<OperationResult<CountryUpdateViewModel>> GetForUpdateCountry(Guid id, IMediator mediator, HttpContext context) =>
         await mediator.Send(new CountryGetForUpdateRequest(id), context.RequestAborted);
 
     [Authorize(Policy = "Administrator")]
-    private async Task<CountryViewModel> PutAfterUpdateCountry(CountryUpdateViewModel viewModel, IMediator mediator, HttpContext context) =>
+    private async Task<OperationResult<CountryViewModel>> PutAfterUpdateCountry(CountryUpdateViewModel viewModel, IMediator mediator, HttpContext context) =>
         await mediator.Send(new CountryUpdateRequest(viewModel), context.RequestAborted);
 }
