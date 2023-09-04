@@ -1,21 +1,23 @@
-﻿using Faliush.ContactManager.Core.Exceptions;
+﻿using Faliush.ContactManager.Core.Common.OperationResult;
+using Faliush.ContactManager.Core.Exceptions;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
 using MediatR;
 
 namespace Faliush.ContactManager.Core.Logic.PersonLogic.Queries;
 
-public record PersonDeleteRequest(Guid Id) : IRequest<Guid>;
+public record PersonDeleteRequest(Guid Id) : IRequest<OperationResult<Guid>>;
 
-public class PersonDeleteRequestHandler : IRequestHandler<PersonDeleteRequest, Guid>
+public class PersonDeleteRequestHandler : IRequestHandler<PersonDeleteRequest, OperationResult<Guid>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
     public PersonDeleteRequestHandler(IUnitOfWork unitOfWork) =>
         _unitOfWork = unitOfWork;
     
-    public async Task<Guid> Handle(PersonDeleteRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<Guid>> Handle(PersonDeleteRequest request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult<Guid>();    
         var repository = _unitOfWork.GetRepository<Person>();
 
         var entity = await repository.GetFirstOrDefaultAsync
@@ -24,7 +26,10 @@ public class PersonDeleteRequestHandler : IRequestHandler<PersonDeleteRequest, G
             );
 
         if (entity is null)
-            throw new ContactManagerNotFoundException($"peron with id: {request.Id} not found");
+        {
+            operation.AddError(new ContactManagerNotFoundException($"peron with id: {request.Id} not found"));
+            return operation;
+        }
 
         repository.Delete(entity);
         await _unitOfWork.SaveChangesAsync();
@@ -32,6 +37,8 @@ public class PersonDeleteRequestHandler : IRequestHandler<PersonDeleteRequest, G
         if (!_unitOfWork.LastSaveChangeResult.IsOk)
             throw new ContactManagerSaveDatabaseException("database saving error", _unitOfWork.LastSaveChangeResult.Exception);
 
-        return entity.Id;
+        operation.Result = entity.Id;
+
+        return operation;
     }
 }

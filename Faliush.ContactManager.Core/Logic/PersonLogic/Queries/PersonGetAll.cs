@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
@@ -6,9 +7,9 @@ using MediatR;
 
 namespace Faliush.ContactManager.Core.Logic.PersonLogic.Queries;
 
-public record PersonGetAllRequest() : IRequest<List<PeopleViewModel>>;
+public record PersonGetAllRequest() : IRequest<OperationResult<List<PeopleViewModel>>>;
 
-public class PersonGetAllRequestHandler : IRequestHandler<PersonGetAllRequest, List<PeopleViewModel>>
+public class PersonGetAllRequestHandler : IRequestHandler<PersonGetAllRequest, OperationResult<List<PeopleViewModel>>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -19,7 +20,7 @@ public class PersonGetAllRequestHandler : IRequestHandler<PersonGetAllRequest, L
         _mapper = mapper;
     }
         
-    public async Task<List<PeopleViewModel>> Handle(PersonGetAllRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<List<PeopleViewModel>>> Handle(PersonGetAllRequest request, CancellationToken cancellationToken)
     {
         var items = await _unitOfWork.GetRepository<Person>()
             .GetAllAsync
@@ -29,6 +30,6 @@ public class PersonGetAllRequestHandler : IRequestHandler<PersonGetAllRequest, L
 
         var result = _mapper.Map<List<PeopleViewModel>>(items.ToList());
 
-        return result;
+        return OperationResult<List<PeopleViewModel>>.CreateResult(result);
     }
 }

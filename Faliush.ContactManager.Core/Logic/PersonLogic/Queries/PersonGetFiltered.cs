@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Enums;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using Faliush.ContactManager.Core.Services;
@@ -9,10 +10,10 @@ using MediatR;
 namespace Faliush.ContactManager.Core.Logic.PersonLogic.Queries;
 
 public record PersonGetFilteredRequest(string? searchBy, string? searchString, string sortBy, string sortOrder) 
-    : IRequest<List<PeopleViewModel>>;
+    : IRequest<OperationResult<List<PeopleViewModel>>>;
 
 
-public class PersonGetFilteredRequestHandler : IRequestHandler<PersonGetFilteredRequest, List<PeopleViewModel>>
+public class PersonGetFilteredRequestHandler : IRequestHandler<PersonGetFilteredRequest, OperationResult<List<PeopleViewModel>>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -24,7 +25,7 @@ public class PersonGetFilteredRequestHandler : IRequestHandler<PersonGetFiltered
         _stringConvertService = stringConvertService;
     }
 
-    public async Task<List<PeopleViewModel>> Handle(PersonGetFilteredRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<List<PeopleViewModel>>> Handle(PersonGetFilteredRequest request, CancellationToken cancellationToken)
     {
         var order = _stringConvertService.ConvertToEnum<SortOptions>(request.sortOrder);
 
@@ -37,6 +38,6 @@ public class PersonGetFilteredRequestHandler : IRequestHandler<PersonGetFiltered
 
         var result = _mapper.Map<List<PeopleViewModel>>(items.ToList());
 
-        return result;
+        return OperationResult<List<PeopleViewModel>>.CreateResult(result);
     }
 }

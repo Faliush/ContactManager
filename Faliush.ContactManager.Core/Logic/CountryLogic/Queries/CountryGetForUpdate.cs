@@ -1,4 +1,5 @@
-﻿using Faliush.ContactManager.Core.Exceptions;
+﻿using Faliush.ContactManager.Core.Common.OperationResult;
+using Faliush.ContactManager.Core.Exceptions;
 using Faliush.ContactManager.Core.Logic.CountryLogic.ViewModels;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
@@ -6,17 +7,18 @@ using MediatR;
 
 namespace Faliush.ContactManager.Core.Logic.CountryLogic.Queries;
 
-public record CountryGetForUpdateRequest(Guid Id) : IRequest<CountryUpdateViewModel>;
+public record CountryGetForUpdateRequest(Guid Id) : IRequest<OperationResult<CountryUpdateViewModel>>;
 
-public class CountryGetForUpdateRequestHandler : IRequestHandler<CountryGetForUpdateRequest, CountryUpdateViewModel>
+public class CountryGetForUpdateRequestHandler : IRequestHandler<CountryGetForUpdateRequest, OperationResult<CountryUpdateViewModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
     public CountryGetForUpdateRequestHandler(IUnitOfWork unitOfWork) =>
         _unitOfWork = unitOfWork;
     
-    public async Task<CountryUpdateViewModel> Handle(CountryGetForUpdateRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<CountryUpdateViewModel>> Handle(CountryGetForUpdateRequest request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult<CountryUpdateViewModel>();
         var entity = await _unitOfWork.GetRepository<Country>()
             .GetFirstOrDefaultAsync
             (
@@ -25,7 +27,10 @@ public class CountryGetForUpdateRequestHandler : IRequestHandler<CountryGetForUp
             );
 
         if (entity is null)
-            throw new ContactManagerNotFoundException($"country with id: {request.Id} not found");
+        {
+            operation.AddError(new ContactManagerNotFoundException($"country with id: {request.Id} not found"));
+            return operation;
+        }
 
         var result = new CountryUpdateViewModel()
         {
@@ -33,6 +38,8 @@ public class CountryGetForUpdateRequestHandler : IRequestHandler<CountryGetForUp
             Name = entity.Name
         };
 
-        return result;
+        operation.Result = result;
+
+        return operation;
     }
 }

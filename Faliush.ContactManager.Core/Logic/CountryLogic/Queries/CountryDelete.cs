@@ -1,21 +1,23 @@
-﻿using Faliush.ContactManager.Core.Exceptions;
+﻿using Faliush.ContactManager.Core.Common.OperationResult;
+using Faliush.ContactManager.Core.Exceptions;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
 using MediatR;
 
 namespace Faliush.ContactManager.Core.Logic.CountryLogic.Queries;
 
-public record CountryDeleteRequest(Guid Id) : IRequest<Guid>;
+public record CountryDeleteRequest(Guid Id) : IRequest<OperationResult<Guid>>;
 
-public class CountryDeleteRequestHandler : IRequestHandler<CountryDeleteRequest, Guid>
+public class CountryDeleteRequestHandler : IRequestHandler<CountryDeleteRequest, OperationResult<Guid>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
     public CountryDeleteRequestHandler(IUnitOfWork unitOfWork) =>
         _unitOfWork = unitOfWork;
     
-    public async Task<Guid> Handle(CountryDeleteRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<Guid>> Handle(CountryDeleteRequest request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult<Guid>();
         var repository = _unitOfWork.GetRepository<Country>();
 
         var entity = await repository.GetFirstOrDefaultAsync
@@ -24,14 +26,23 @@ public class CountryDeleteRequestHandler : IRequestHandler<CountryDeleteRequest,
             );
 
         if (entity is null)
-            throw new ContactManagerNotFoundException($"country with id: {request.Id} not found");
+        {
+            operation.AddError(new ContactManagerNotFoundException($"country with id: {request.Id} not found"));
+            return operation;
+        }
 
         repository.Delete(entity);
         await _unitOfWork.SaveChangesAsync();
 
         if (!_unitOfWork.LastSaveChangeResult.IsOk)
-            throw new ContactManagerSaveDatabaseException();
+        {
+            var exception = _unitOfWork.LastSaveChangeResult.Exception ?? new ContactManagerSaveDatabaseException();
+            operation.AddError(exception);
+            return operation;
+        }
 
-        return entity.Id;
+        operation.Result = entity.Id;
+
+        return operation;
     }
 }

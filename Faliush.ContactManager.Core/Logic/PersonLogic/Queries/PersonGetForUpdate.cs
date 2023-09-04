@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Exceptions;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
@@ -7,9 +8,9 @@ using MediatR;
 
 namespace Faliush.ContactManager.Core.Logic.PersonLogic.Queries;
 
-public record PersonGetForUpdateRequest(Guid Id) : IRequest<PersonUpdateViewModel>;
+public record PersonGetForUpdateRequest(Guid Id) : IRequest<OperationResult<PersonUpdateViewModel>>;
 
-public class PersonGetForUpdateRequestHandler : IRequestHandler<PersonGetForUpdateRequest, PersonUpdateViewModel>
+public class PersonGetForUpdateRequestHandler : IRequestHandler<PersonGetForUpdateRequest, OperationResult<PersonUpdateViewModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -19,8 +20,9 @@ public class PersonGetForUpdateRequestHandler : IRequestHandler<PersonGetForUpda
         _mapper = mapper;    
     }
     
-    public async Task<PersonUpdateViewModel> Handle(PersonGetForUpdateRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<PersonUpdateViewModel>> Handle(PersonGetForUpdateRequest request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult<PersonUpdateViewModel>();
         var entity = await _unitOfWork.GetRepository<Person>()
             .GetFirstOrDefaultAsync
             (
@@ -29,10 +31,14 @@ public class PersonGetForUpdateRequestHandler : IRequestHandler<PersonGetForUpda
             );
 
         if (entity is null)
-            throw new ContactManagerNotFoundException($"person with id: {request.Id} not found");
+        {
+            operation.AddError(new ContactManagerNotFoundException($"person with id: {request.Id} not found"));
+            return operation;
+        }
 
         var result = _mapper.Map<PersonUpdateViewModel>(entity);
 
-        return result;
+        operation.Result = result;
+        return operation;
     }
 }

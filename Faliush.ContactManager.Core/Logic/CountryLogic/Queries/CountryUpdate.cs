@@ -1,4 +1,5 @@
-﻿using Faliush.ContactManager.Core.Exceptions;
+﻿using Faliush.ContactManager.Core.Common.OperationResult;
+using Faliush.ContactManager.Core.Exceptions;
 using Faliush.ContactManager.Core.Logic.CountryLogic.ViewModels;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
@@ -6,16 +7,17 @@ using MediatR;
 
 namespace Faliush.ContactManager.Core.Logic.CountryLogic.Queries;
 
-public record CountryUpdateRequest(CountryUpdateViewModel Model) : IRequest<CountryViewModel>;
+public record CountryUpdateRequest(CountryUpdateViewModel Model) : IRequest<OperationResult<CountryViewModel>>;
 
-public class CountryUpdateRequestHandler : IRequestHandler<CountryUpdateRequest, CountryViewModel>
+public class CountryUpdateRequestHandler : IRequestHandler<CountryUpdateRequest, OperationResult<CountryViewModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
     public CountryUpdateRequestHandler(IUnitOfWork unitOfWork) =>
         _unitOfWork = unitOfWork;
 
-    public async Task<CountryViewModel> Handle(CountryUpdateRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<CountryViewModel>> Handle(CountryUpdateRequest request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult<CountryViewModel>();
         var repository = _unitOfWork.GetRepository<Country>();
 
         var entity = await repository.GetFirstOrDefaultAsync
@@ -24,7 +26,10 @@ public class CountryUpdateRequestHandler : IRequestHandler<CountryUpdateRequest,
             );
 
         if (entity is null)
-            throw new ContactManagerNotFoundException($"country with id: {request.Model.Id} not found");
+        {
+            operation.AddError(new ContactManagerNotFoundException($"country with id: {request.Model.Id} not found"));
+            return operation;
+        }
 
         entity.Name = request.Model.Name;
 
@@ -32,7 +37,11 @@ public class CountryUpdateRequestHandler : IRequestHandler<CountryUpdateRequest,
         await _unitOfWork.SaveChangesAsync();
 
         if (!_unitOfWork.LastSaveChangeResult.IsOk)
-            throw new ContactManagerSaveDatabaseException(_unitOfWork.LastSaveChangeResult.Exception?.ToString());
+        {
+            var exception = _unitOfWork.LastSaveChangeResult.Exception ?? new ContactManagerSaveDatabaseException();
+            operation.AddError(exception);
+            return operation;
+        }
 
         var result = new CountryViewModel()
         {
@@ -40,6 +49,8 @@ public class CountryUpdateRequestHandler : IRequestHandler<CountryUpdateRequest,
             Name = entity.Name
         };
 
-        return result;
+        operation.Result = result;
+
+        return operation;
     }
 }
