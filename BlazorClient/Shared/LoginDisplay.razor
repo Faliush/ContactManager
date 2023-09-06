@@ -6,11 +6,20 @@
 
 <AuthorizeView>
     <Authorized>
-        Hello, @context.User.Identity?.Name!
-        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+        <div class="d-flex align-items-center gap-3">
+            <p class="mb-0 text-white">Hello, @context.User.Identity?.Name!</p>
+            <button class="nav-link btn btn-link btn-primary text-white" @onclick="BeginSignOut">Log out</button>
+        </div>
     </Authorized>
     <NotAuthorized>
-        <a href="authentication/login">Log in</a>
+        <div class="d-flex gap-3">
+            <div class="btn btn-primary" role="button">
+                <a href="authentication/login" class="text-white text-decoration-none">Log in</a>
+            </div>
+            <div class="btn btn-outline-secondary" role="button">
+                <a href="#" class="text-decoration-none" style="color: #176B87;">About</a>
+            </div>
+        </div>
     </NotAuthorized>
 </AuthorizeView>
 
