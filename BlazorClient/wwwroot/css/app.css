@@ -64,12 +64,15 @@ a, .btn-link {
 }
 
 
-/**/
+/*
+    heroicons.com
+    pexels
+*/
 
 body {
     background-image: url('https://images.pexels.com/photos/3768894/pexels-photo-3768894.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
-    background-size: cover;  Adjusts the image size to cover the entire viewport 
-    background-repeat: no-repeat;  Prevents the image from repeating 
+    background-size: cover;  /*Adjusts the image size to cover the entire viewport */
+    background-repeat: no-repeat;  /*Prevents the image from repeating*/ 
 }
 
 /* Color of the links BEFORE scroll */
@@ -112,11 +115,18 @@ body {
     text-align: center;
 }
 
-/*.hero-container {
-    background-image: url('https://images.pexels.com/photos/3768894/pexels-photo-3768894.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
-    background-size: cover;  Adjusts the image size to cover the entire viewport;
-    background-repeat: no-repeat;  Prevents the image from repeating;
-}*/
+.feature-icon-green {
+    stroke: #087f5b;
+    width: 24px;
+    height: 24px;
+}
+
+.feature-icon-red {
+    stroke: red;
+    width: 24px;
+    height: 24px;
+}
+
 
 
 
