@@ -59,6 +59,74 @@ a, .btn-link {
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
+
+
+/*
+    heroicons.com
+    pexels
+*/
+
+body {
+    background-image: url('https://images.pexels.com/photos/3768894/pexels-photo-3768894.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+    background-size: cover;  /*Adjusts the image size to cover the entire viewport */
+    background-repeat: no-repeat;  /*Prevents the image from repeating*/ 
+}
+
+/* Color of the links BEFORE scroll */
+.navbar-scroll .nav-link,
+.navbar-scroll .navbar-toggler-icon,
+.navbar-scroll .navbar-brand {
+    color: #fff;
+}
+
+/* Color of the links AFTER scroll */
+.navbar-scrolled .nav-link,
+.navbar-scrolled .navbar-toggler-icon,
+.navbar-scrolled .navbar-brand {
+    color: #fff;
+}
+
+/* Color of the navbar AFTER scroll */
+.navbar-scroll,
+.navbar-scrolled {
+    background-color: #cbbcb1;
+}
+
+.mask-custom {
+    backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, .15);
+}
+
+.navbar-brand {
+    font-size: 1.75rem;
+    letter-spacing: 3px;
+    margin-right: 3rem;
+}
+
+.card {
+    top: 50%;
+    box-shadow: 0 0 5px 0;
+    background: inherit;
+    backdrop-filter: blur(20px);
+    margin: 10rem 60rem 1.2rem 3rem;
+    text-align: center;
+}
+
+.feature-icon-green {
+    stroke: #087f5b;
+    width: 24px;
+    height: 24px;
+}
+
+.feature-icon-red {
+    stroke: red;
+    width: 24px;
+    height: 24px;
+}
+
+
+
+

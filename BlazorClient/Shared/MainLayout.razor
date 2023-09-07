@@ -1,15 +1,38 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
+    
     <main>
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
-        </div>
+        <nav class="navbar navbar-expand-xl navbar-light mask-custom shadow-0">
+            <div class="container">
+                <a class="navbar-brand" href="/"><span style="color: #176B87;">Contact</span><span style="color: #fff;">Manager</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
+                <div class=" collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ms-auto me-auto ">
+                        <li class="nav-item">
+                            <a class="nav-link mx-3 active fw-bolder" style="color:#053B50" aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-3 fw-bolder" style="color:#053B50" href="/people">People</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-3 fw-bolder" style="color:#053B50" href="/pricing">Pricing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-3 fw-bolder" style="color:#053B50" href="/other">Other</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav d-none d-lg-inline-flex ms-auto " >
+                        <li class="nav-item mx-2">
+                            <LoginDisplay />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
         <article class="content px-4">
             @Body
         </article>
