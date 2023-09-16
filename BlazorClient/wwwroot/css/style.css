@@ -42,13 +42,11 @@ body {
     margin-right: 3rem;
 }
 
-.card {
+.blur-box {
     top: 50%;
     box-shadow: 0 0 5px 0;
     background: inherit;
-    backdrop-filter: blur(20px);
     margin: 10rem 60rem 1.2rem 3rem;
-    text-align: center;
 }
 
 .feature-icon-green {
@@ -90,38 +88,38 @@ body {
     margin: auto;
 }
 
-    .table thead {
-        font-weight: bold;
-        color: #000000;
-        text-align: left;
-    }
+.table thead {
+    font-weight: bold;
+    color: #000000;
+    text-align: left;
+}
 
-        .table thead a:link, .table thead a:visited {
-            color: #000000;
-            text-decoration: none;
-        }
+.table thead a:link, .table thead a:visited {
+    color: #000000;
+    text-decoration: none;
+}
 
-        .table thead a:hover {
-            text-decoration: underline;
-        }
+.table thead a:hover {
+    text-decoration: underline;
+}
 
-        .table thead th {
-            padding: 5px 10px;
-            text-align: center;
-            border-bottom: 3px solid #efefef;
-        }
+.table thead th {
+    padding: 5px 10px;
+    text-align: center;
+    border-bottom: 3px solid #efefef;
+}
 
-    .table tbody td {
-        padding: 8px 12px;
-        text-align: center;
-    }
+.table tbody td {
+    padding: 8px 12px;
+    text-align: center;
+}
 
-    .table tbody tr {
-        transition: background-color 0.4s, color 0.3s;
-        /*background-color: #efefef;*/
-        border-bottom: 1px solid #efefef;
-    }
+.table tbody tr {
+    transition: background-color 0.4s, color 0.3s;
+    /*background-color: #efefef;*/
+    border-bottom: 1px solid #efefef;
+}
 
-        .table tbody tr:hover {
-            background-color: #c2c2c2;
-        }
+.table tbody tr:hover {
+    background-color: #c2c2c2;
+}
