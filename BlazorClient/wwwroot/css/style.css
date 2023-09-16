@@ -1,0 +1,127 @@
+﻿
+/*
+    heroicons.com
+    pexels
+*/
+
+body {
+    color: #343a40;
+    background-image: url('https://images.pexels.com/photos/3768894/pexels-photo-3768894.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+    background-size: cover; /*Adjusts the image size to cover the entire viewport */
+    background-repeat: no-repeat; /*Prevents the image from repeating*/
+}
+
+/* Color of the links BEFORE scroll */
+.navbar-scroll .nav-link,
+.navbar-scroll .navbar-toggler-icon,
+.navbar-scroll .navbar-brand {
+    color: #fff;
+}
+
+/* Color of the links AFTER scroll */
+.navbar-scrolled .nav-link,
+.navbar-scrolled .navbar-toggler-icon,
+.navbar-scrolled .navbar-brand {
+    color: #fff;
+}
+
+/* Color of the navbar AFTER scroll */
+.navbar-scroll,
+.navbar-scrolled {
+    background-color: #cbbcb1;
+}
+
+.mask-custom {
+    backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, .15);
+}
+
+.navbar-brand {
+    font-size: 1.75rem;
+    letter-spacing: 3px;
+    margin-right: 3rem;
+}
+
+.card {
+    top: 50%;
+    box-shadow: 0 0 5px 0;
+    background: inherit;
+    backdrop-filter: blur(20px);
+    margin: 10rem 60rem 1.2rem 3rem;
+    text-align: center;
+}
+
+.feature-icon-green {
+    stroke: #087f5b;
+    width: 24px;
+    height: 24px;
+}
+
+.feature-icon-red {
+    stroke: red;
+    width: 24px;
+    height: 24px;
+}
+
+.feature-icon-person {
+    stroke: #053B50;
+    width: 24px;
+    height: 24px;
+}
+
+.feature-icon-white {
+    stroke: white;
+    width: 24px;
+    height: 24px;
+}
+
+.btn-outline-green {
+    color: #176B87;
+    border-color: #176B87;
+}
+
+.w-75 {
+    width: 75%;
+}
+
+.table {
+    border-collapse: collapse;
+    margin: 10px 0px;
+    margin: auto;
+}
+
+    .table thead {
+        font-weight: bold;
+        color: #000000;
+        text-align: left;
+    }
+
+        .table thead a:link, .table thead a:visited {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .table thead a:hover {
+            text-decoration: underline;
+        }
+
+        .table thead th {
+            padding: 5px 10px;
+            text-align: center;
+            border-bottom: 3px solid #efefef;
+        }
+
+    .table tbody td {
+        padding: 8px 12px;
+        text-align: center;
+    }
+
+    .table tbody tr {
+        transition: background-color 0.4s, color 0.3s;
+        /*background-color: #efefef;*/
+        border-bottom: 1px solid #efefef;
+    }
+
+        .table tbody tr:hover {
+            background-color: #c2c2c2;
+        }

@@ -8,17 +8,13 @@
     <Authorized>
         <div class="d-flex align-items-center gap-3">
             <p class="mb-0 text-white">Hello, @context.User.Identity?.Name!</p>
-            <button class="nav-link btn btn-link btn-primary text-white" @onclick="BeginSignOut">Log out</button>
+            <Button Color="ButtonColor.Primary" @onclick="BeginSignOut">Log out</Button>
         </div>
     </Authorized>
     <NotAuthorized>
-        <div class="d-flex gap-3">
-            <div class="btn btn-primary" role="button">
-                <a href="authentication/login" class="text-white text-decoration-none">Log in</a>
-            </div>
-            <div class="btn btn-outline-secondary" role="button">
-                <a href="#" class="text-decoration-none" style="color: #176B87;">About</a>
-            </div>
+        <div class="d-flex gap-4">   
+            <Button Type="ButtonType.Link" Color="ButtonColor.Primary" To="authentication/login">Log in</Button>
+            <Button Type="ButtonType.Link" Color="ButtonColor.Primary" Outline=true To="#">About</Button>
         </div>
     </NotAuthorized>
 </AuthorizeView>
