@@ -11,14 +11,14 @@
                     <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg" />
                     <div>
                         <span class="font-weight-bold">
-                            @Result.FirstName
+                            @Model.FirstName
                         </span>
                         <span class="font-weight-bold ms-1">
-                            @Result.LastName
+                            @Model.LastName
                         </span>
                     </div>
                     <span class="text-black-50">
-                        @Result.Email
+                        @Model.Email
                     </span>
                 </div>
             </div>
@@ -27,31 +27,31 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="text-right">Profile Settings</h4>
                     </div>
-                    <EditForm Model="Result" OnValidSubmit="ValidSubmit" >
+                    <EditForm Model="Model" OnValidSubmit="ValidSubmit" >
                         <DataAnnotationsValidator />
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <label class="labels">Name:</label><InputText @bind-Value="Result.FirstName" placeholder="first name" />
-                                <ValidationMessage For="@(() => Result.FirstName)" />
+                                <label class="labels">Name:</label><InputText @bind-Value="Model.FirstName" placeholder="first name" />
+                                <ValidationMessage For="@(() => Model.FirstName)" />
                             </div>
                             <div class="col-md-6">
-                                <label class="labels">Surname:</label><InputText @bind-Value="Result.LastName" placeholder="surname" />
-                                <ValidationMessage For="@(() => Result.LastName)" />
+                                <label class="labels">Surname:</label><InputText @bind-Value="Model.LastName" placeholder="surname" />
+                                <ValidationMessage For="@(() => Model.LastName)" />
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-12 mb-3">
-                                <label class="labels me-2">Mobile Number:</label><InputText @bind-Value="Result.Phone" placeholder="enter phone number" />
-                                <ValidationMessage For="@(() => Result.Phone)" />
+                                <label class="labels me-2">Mobile Number:</label><InputText @bind-Value="Model.Phone" placeholder="enter phone number" />
+                                <ValidationMessage For="@(() => Model.Phone)" />
                             </div>
                             <div class="col-md-12 mb-3" >
-                                <label class="labels me-2">Email:</label><InputText @bind-Value="Result.Email" placeholder="enter email" />
-                                <ValidationMessage For="@(() => Result.Email)" />
+                                <label class="labels me-2">Email:</label><InputText @bind-Value="Model.Email" placeholder="enter email" />
+                                <ValidationMessage For="@(() => Model.Email)" />
                             </div>
-                            <div class="col-md-12 d-flex mb-3 align-items-center"><label class="labels me-2">Date of birth:</label><DateInput TValue="DateTime" @bind-Value="Result.DateOfBirth" placeholder="enter date" style="width:200px;" /></div>
+                            <div class="col-md-12 d-flex mb-3 align-items-center"><label class="labels me-2">Date of birth:</label><DateInput TValue="DateTime" @bind-Value="Model.DateOfBirth" placeholder="enter date" style="width:200px;" /></div>
                             <div class="col-md-12 mb-3">
                                 <label class="labels me-2">Gender:</label>
-                                <InputRadioGroup @bind-Value="Result.Gender">
+                                <InputRadioGroup @bind-Value="Model.Gender">
                                     @foreach(var item in Result.Genders)
                                     {
                                         <InputRadio Value="@item" />
@@ -61,11 +61,11 @@
                             </div>
                             <div class="col-md-12 d-flex align-items-center mb-3">
                                 <label class="labels me-2">Country:</label>
-                                <InputSelect @bind-Value="Result.CountryId" class="dropdown dropdown-toggle btn btn-secondary btn-sm">
+                                <InputSelect @bind-Value="Model.CountryId" class="dropdown dropdown-toggle btn btn-secondary btn-sm">
                                     <option value="" selected="selected">None</option>
                                     @foreach(var item in Result.Countries)
                                     {
-                                            if (item.Id == Result.CountryId)
+                                            if (item.Id == Model.CountryId)
                                             {
                                                 <option value="@item.Id" selected="selected">@item.Name</option>
                                             }
@@ -78,7 +78,7 @@
                             </div>
                             <div class="col-md-12">
                                 <label class="labels">Address:</label>
-                                <InputTextArea @bind-Value="Result.Address" placeholder="enter your address" style="width: 100%"></InputTextArea>
+                                <InputTextArea @bind-Value="Model.Address" placeholder="enter your address" style="width: 100%"></InputTextArea>
                             </div>
                         </div>
                         <div class="mt-5 text-center">

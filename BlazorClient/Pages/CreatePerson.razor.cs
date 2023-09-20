@@ -2,7 +2,6 @@
 using BlazorClient.DTO;
 using BlazorClient.DTO.Results;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 using System.Net.Http.Json;
 
 namespace BlazorClient.Pages;
@@ -12,11 +11,12 @@ public class CreatePersonComponentModel : ComponentBase
 	[Inject] HttpClient HttpClient { get; set; }
 	[Inject] NavigationManager NavigationManager { get; set; }
 
-	protected CreatePersonResult? Result { get; set; }
+	protected GetForCreatePersonResult? Result { get; set; }
+	protected CreatePersonDTO Model { get; set; } = new();
 
 	protected override async Task OnInitializedAsync()
 	{
-		var result = await HttpClient.GetFromJsonAsync<CreatePersonDTO>("people/create");
+		var result = await HttpClient.GetFromJsonAsync<GetForCreatePersonDTO>("people/create");
 
 		if (result is null)
 			NavigationManager.NavigateTo("/error");
@@ -29,7 +29,7 @@ public class CreatePersonComponentModel : ComponentBase
 
 	protected async Task ValidSubmit()
 	{
-		var response = await HttpClient.PostAsJsonAsync("people", Result!);
+		var response = await HttpClient.PostAsJsonAsync("people", Model);
 
 		var result = await response.Content.ReadFromJsonAsync<PersonDTO>();
 
@@ -40,6 +40,7 @@ public class CreatePersonComponentModel : ComponentBase
 		}
 
 		ShowMessage(ToastType.Success, message: "The person was created successfully");
+		Model = new();
     }
 
     protected List<ToastMessage> messages = new List<ToastMessage>();
