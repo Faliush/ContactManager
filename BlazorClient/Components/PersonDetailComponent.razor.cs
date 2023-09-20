@@ -23,7 +23,8 @@ public class PersonDetailComponentModel : ComponentBase
             NavigationManager.NavigateTo("/error");
 
         if (!result!.Ok)
-            NavigationManager.NavigateTo($"/error/{result.Exception!.ContainsKey("message")}/{result.Metadata!.ContainsKey("message")}");
+            NavigationManager.NavigateTo($"/error/{result.Exception["message"]}/{result.Metadata["message"]}");
+        
 
         Result = result!.Result;
 
