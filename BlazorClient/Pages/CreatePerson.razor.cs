@@ -20,9 +20,12 @@ public class CreatePersonComponentModel : ComponentBase
 
 		if (result is null)
 			NavigationManager.NavigateTo("/error");
+				
 
 		if (!result!.Ok)
-			NavigationManager.NavigateTo($"/error/{result.Exception!.ContainsKey("message")}/{result.Metadata!.ContainsKey("message")}");
+		{
+            NavigationManager.NavigateTo($"/error/{result.Exception["message"]}/{result.Metadata["message"]}");
+        }
 
 		Result = result!.Result;
 	}
@@ -35,8 +38,8 @@ public class CreatePersonComponentModel : ComponentBase
 
 		if (!result!.Ok)
 		{
-            NavigationManager.NavigateTo($"/error/{result.Exception!.ContainsKey("message")}/{result.Metadata!.ContainsKey("message")}");
-			ShowMessage(ToastType.Danger, message: "Something went wrong");
+            ShowMessage(ToastType.Danger, message: "Something went wrong");
+			NavigationManager.NavigateTo($"/error/{result.Exception["message"]}/{result.Metadata["message"]}");
 		}
 
 		ShowMessage(ToastType.Success, message: "The person was created successfully");

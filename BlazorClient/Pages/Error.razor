@@ -1,7 +1,16 @@
 ﻿@page "/error"
-@page "/error/{MetaMessage}/{ExceptionMessage}"
+@page "/error/{ExceptionMessage?}/{MetaMessage?}"
 @inherits ErrorComponent
 
-<h1>@MetaMessage</h1>
+<div class="container-xxl mt-4 bg-light rounded-3 shadow-lg border border-2 p-5">
 
-<h2>@ExceptionMessage</h2>
+	<div class="mb-3">
+		<img src="https://cdn-icons-png.flaticon.com/512/1548/1548682.png" style="width: 300px" class="mx-auto d-block" />
+	</div>
+
+	<div class="text-center">
+		<p class="mb-2 text-danger fs-3 fw-bolder">@MetaMessage</p>
+		<p class="fs-4">@ExceptionMessage</p>
+	</div>
+
+</div>
