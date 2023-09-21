@@ -51,7 +51,7 @@ public class PersonDetailComponentModel : ComponentBase
                 ToastService.Notify(new ToastMessage(ToastType.Warning, $"{result.Metadata["message"]}", $"{result.Exception["message"]}"));
             
 
-            ToastService.Notify(new ToastMessage(ToastType.Success, $"Employee deleted successfully."));
+            ToastService.Notify(new ToastMessage(ToastType.Success, $"Person deleted successfully."));
             await modal.HideAsync();
             await NeedReloadData();
         }
