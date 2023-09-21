@@ -62,7 +62,7 @@
                         <td>@person.LastName</td>
                         <td>@person.Email</td>
                         <td>
-                            <BlazorClient.Components.PersonDetailComponent PersonId="@person.Id"/>
+                            <BlazorClient.Components.PersonDetailComponent PersonId="@person.Id" ReloadData="ReloadData"/>
                         </td>
                     </tr>
                 }

@@ -1,6 +1,8 @@
 ﻿@inherits PersonDetailComponentModel
 @attribute [Authorize]
 
+<Toasts class="p-3" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
+<ConfirmDialog @ref="dialog" />
 <Modal @ref="modal">
     <BodyTemplate>
         <div class="container rounded bg-white">
@@ -32,7 +34,7 @@
                 </div>
                 <div class="d-flex gap-lg-5 justify-content-center">
                     <Button Color="ButtonColor.Success" Type="ButtonType.Link" To="#" Size="Size.Medium" style="width:100px">Edit</Button>
-                    <Button Color="ButtonColor.Danger" Size="Size.Medium" style="width:100px">Delete</Button>
+                    <Button Color="ButtonColor.Danger" Size="Size.Medium" @onclick="ShowConfirmationAsync" style="width:100px">Delete</Button>
                 </div>
             </div>
         </div>
