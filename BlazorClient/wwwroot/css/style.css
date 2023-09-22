@@ -120,13 +120,42 @@ body {
 
 .table tbody tr {
     transition: background-color 0.4s, color 0.3s;
-    /*background-color: #efefef;*/
     border-bottom: 1px solid #efefef;
 }
 
 .table tbody tr:hover {
     background-color: #c2c2c2;
 }
+
+
+.tableFixHead {
+    overflow-y: auto; /* make the table scrollable if height is more than 200 px  */
+    height: 500px; /* gives an initial height of 200px to the table */
+}
+
+.tableFixHead thead th {
+    position: sticky; /* make the table heads sticky */
+    top: 0px; /* table head will be placed from the top of the table and sticks to it */
+    background: #eee;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 *,
 *::before,
