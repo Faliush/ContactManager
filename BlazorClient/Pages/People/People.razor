@@ -13,7 +13,7 @@
                 </svg>
                 </Button>
             <div class="d-flex">
-                <select class="dropdown dropdown-toggle" @bind="SelectedSearchBy" style="width:150px;">
+                <select class="dropdown dropdown-toggle btn btn-outline-secondary me-1" @bind="SelectedSearchBy" style="width:150px;">
                     @foreach(var item in SearchFields)
                     {
                         if(item.Key == SelectedSearchBy)

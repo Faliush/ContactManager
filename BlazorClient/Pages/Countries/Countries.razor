@@ -3,6 +3,7 @@
 @attribute [Authorize(Policy = "AdministratorPage")]
 @inherits CountriesComponentModel
 
+<ConfirmDialog @ref="dialog" />
 <form  method="get">
     <div class="container-xxl mt-4 bg-light rounded-3 shadow-lg border border-2 p-3">
        
@@ -31,7 +32,7 @@
                 </thead>
 
                 <tbody>
-                    @foreach(var country in Response.Result)
+                    @foreach(var country in Response!.Result!)
                     {
                         <tr>
                             <td>
@@ -42,8 +43,8 @@
                             <td>@country.Id</td>
                             <td>@country.Name</td>
                             <td class="d-flex gap-3 justify-content-center">
-                                <Button Color="ButtonColor.Success" style="width:125px">Edit</Button>
-                                <Button Color="ButtonColor.Danger" Outline="true" style="width:125px">Delete</Button>
+                                <a class="btn btn-success btn-md" href="country/update/@country.Id" role="button" style="width:100px">Edit</a>
+                                <Button Color="ButtonColor.Danger" Outline="true" @onclick="() => ShowConfirmationAsync(country.Id)" style="width:125px">Delete</Button>
                             </td>
                         </tr>
                     }
