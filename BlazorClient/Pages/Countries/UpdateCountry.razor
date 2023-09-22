@@ -1,0 +1,26 @@
+﻿@page "/country/update/{CountryId:guid}"
+<PageTitle>Update Country</PageTitle>
+@attribute [Authorize(Policy = "AdministratorPage")]
+@inherits UpdateCountryComponentModel
+
+<Toasts class="p-3" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
+<div class="container mt-4 bg-light rounded-3 shadow-lg border border-2 p-5 w-50">
+
+	<div class="d-flex justify-content-center mb-5 mt-2">
+		<img class="rounded-circle" width="300px" src="https://images.twinkl.co.uk/tr/raw/upload/u/ux/earth-parents-wiki_ver_1.jpg" />
+	</div>
+
+	<EditForm Model="Model" OnValidSubmit="ValidSubmit">
+		<DataAnnotationsValidator/>
+		<div class="d-flex justify-content-center">
+			<label class="labels me-3">Name:</label>
+			<InputText @bind-Value="Model.Name" placeholder="enter country name"/>
+		</div>
+		<ValidationMessage For="@(() => Model.Name)" />
+		<ValidationSummary/>
+
+		<div class="mt-5 text-center">    
+			<Button Color="ButtonColor.Primary" Type="ButtonType.Submit">Update Country</Button>
+        </div>
+	</EditForm>
+</div>
