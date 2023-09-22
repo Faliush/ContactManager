@@ -4,7 +4,7 @@ using BlazorClient.DTO.Results;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 
-namespace BlazorClient.Pages;
+namespace BlazorClient.Pages.People;
 
 public class UpdatePersonComponentModel : ComponentBase
 {

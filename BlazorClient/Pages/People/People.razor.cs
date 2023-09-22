@@ -3,15 +3,15 @@ using BlazorClient.DTO.Results;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 
-namespace BlazorClient.Pages;
+namespace BlazorClient.Pages.People;
 
 public class PeopleComponentModel : ComponentBase
 {
     [Inject] HttpClient HttpClient { get; set; }
-    [Inject] NavigationManager NavigationManager{ get; set; }
+    [Inject] NavigationManager NavigationManager { get; set; }
     protected PeopleResult Result { get; set; }
 
-    protected Dictionary<string, string> SearchFields  = new()
+    protected Dictionary<string, string> SearchFields = new()
         {
             {"FirstName", "Name"},
             {"LastName", "Surname"},

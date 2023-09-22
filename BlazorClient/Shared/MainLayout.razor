@@ -21,6 +21,11 @@
                         <li class="nav-item">
                             <a class="nav-link mx-3 fw-bolder" style="color:#053B50" href="/people">People</a>
                         </li>
+                        <AuthorizeView Policy="AdministratorPage">
+                            <li class="nav-item">
+                                <a class="nav-link mx-3 fw-bolder" style="color:#053B50" href="/countries">Countries</a>
+                            </li>
+                        </AuthorizeView>
                         <li class="nav-item">
                             <a class="nav-link mx-3 fw-bolder" style="color:#053B50" href="/other">Other</a>
                         </li>
