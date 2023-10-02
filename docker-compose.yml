@@ -1,0 +1,73 @@
+version: '3.4'
+
+networks:
+  application:
+
+services:
+  db.mssqlserver.api:
+    container_name: ApiDb
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - SA_PASSWORD=Admin1234
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - './volumes/db/ApiSqlserver:/var/opt/mssql/data'
+    networks:
+      - application
+  
+  db.mssqlserver.auth:
+    container_name: AuthDb
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - SA_PASSWORD=Admin1234
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+    ports:
+      - "1411:1411"
+    volumes:
+      - './volumes/db/AuthSqlserver:/var/opt/mssql/data'
+    networks:
+      - application
+  
+  webapi:
+    container_name: Api
+    build:
+      context: .
+      dockerfile: Faliush.ContactManager.Api/Dockerfile
+    ports:
+      - 5000:80
+    depends_on:
+      - db.mssqlserver.api
+      - auth.server
+    environment:
+      - DB_API_HOST=db.mssqlserver.api
+      - DB_API_NAME=ContactManagerApiDb
+      - DB_SA_PASSWORD=Admin1234
+      - DB_API_Port=1433
+    networks:
+      - application
+
+  auht.server:
+    container_name: IdentityServer
+    build:
+      context: .
+      dockerfile: IdentityServer/Dockerfile
+    ports:
+      - 10000:81
+    depends_on:
+      - db.mssqlserver.auth
+    environment:
+      - DB_AUTH_HOST=db.mssqlserver.auth
+      - DB_AUTH_NAME=ContactManagerIdentityServerDb
+      - DB_SA_PASSWORD=Admin1234
+      - DB_AUTH_Port=1411      
+    networks:
+      - application
+
+
+
+
+
