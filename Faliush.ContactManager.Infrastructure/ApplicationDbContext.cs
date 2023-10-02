@@ -6,10 +6,11 @@ namespace Faliush.ContactManager.Infrastructure;
 
 public class ApplicationDbContext : DbContextBase
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)  {  }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) => 
+        base.Database.EnsureCreated();
 
-    public virtual DbSet<Person> People { get; set; }
-    public virtual DbSet<Country> Countries { get; set; }
+    public virtual DbSet<Person> People => Set<Person>(); // 
+    public virtual DbSet<Country> Countries => Set<Country>(); //
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

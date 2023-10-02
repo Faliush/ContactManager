@@ -7,10 +7,10 @@ namespace Faliush.ContactManager.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<ApplicationDbContext>(
-            option => option.UseSqlServer(configuration.GetConnectionString(nameof(ApplicationDbContext))));
+            option => option.UseSqlServer(connectionString));
 
         services.AddScoped<IRepositoryFactory, UnitOfWork<ApplicationDbContext>>();
         services.AddScoped<IUnitOfWork<ApplicationDbContext>, UnitOfWork<ApplicationDbContext>>();

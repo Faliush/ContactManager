@@ -30,8 +30,25 @@ services:
     volumes:
       - './volumes/db/AuthSqlserver:/var/opt/mssql/data'
     networks:
+      - application  
+
+  auth.server:
+    container_name: IdentityServer
+    build:
+      context: .
+      dockerfile: IdentityServer/Dockerfile
+    ports:
+      - 10000:81
+    depends_on:
+      - db.mssqlserver.auth
+    environment:
+      - DB_AUTH_HOST=db.mssqlserver.auth
+      - DB_AUTH_NAME=ContactManagerIdentityServerDb
+      - DB_SA_PASSWORD=Admin1234
+      - DB_AUTH_PORT=1411      
+    networks:
       - application
-  
+
   webapi:
     container_name: Api
     build:
@@ -46,27 +63,9 @@ services:
       - DB_API_HOST=db.mssqlserver.api
       - DB_API_NAME=ContactManagerApiDb
       - DB_SA_PASSWORD=Admin1234
-      - DB_API_Port=1433
+      - DB_API_PORT=1433
     networks:
       - application
-
-  auht.server:
-    container_name: IdentityServer
-    build:
-      context: .
-      dockerfile: IdentityServer/Dockerfile
-    ports:
-      - 10000:81
-    depends_on:
-      - db.mssqlserver.auth
-    environment:
-      - DB_AUTH_HOST=db.mssqlserver.auth
-      - DB_AUTH_NAME=ContactManagerIdentityServerDb
-      - DB_SA_PASSWORD=Admin1234
-      - DB_AUTH_Port=1411      
-    networks:
-      - application
-
 
 
 
