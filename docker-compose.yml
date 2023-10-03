@@ -67,6 +67,19 @@ services:
     networks:
       - application
 
+  # webui:
+  #   container_name: BlazorClient
+  #   build:
+  #     context: .
+  #     dockerfile: BlazorClient/Dockerfile
+  #   ports:
+  #     - 7000:82
+  #   depends_on:
+  #     - webapi
+  #     - auth.server
+  #   networks:
+  #     - application
+
 
 
 
