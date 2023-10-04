@@ -1,53 +1,9 @@
-using IdentityServer.Data;
-using IdentityServer.Data.Base;
 using IdentityServer.Data.DatabaseInitializer;
-using IdentityServer.Services;
-using Microsoft.EntityFrameworkCore;
+using IdentityServer.Definitions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-var migrationAssembly = typeof(Program).Assembly.GetName().Name;
-
 builder.Services.AddCors();
-
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
-    {
-        options.UseSqlServer(connectionString);
-    })
-    .AddIdentity<ApplicationUser, ApplicationRole>(config => 
-    {
-        config.Password.RequireNonAlphanumeric = false;
-        config.Password.RequiredLength = 5;
-        config.Password.RequiredUniqueChars = 3;
-        config.Password.RequireUppercase = false;
-    })
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-builder.Services.AddIdentityServer(config =>
-{
-    config.UserInteraction.LoginUrl = "/Account/Login";
-})
-    .AddAspNetIdentity<ApplicationUser>()
-    .AddProfileService<ProfileService>()
-    .AddConfigurationStore(options =>
-    {
-        options.ConfigureDbContext =
-            b => b.UseSqlServer(connectionString,
-                sql => sql.MigrationsAssembly(migrationAssembly));
-
-    })
-    .AddOperationalStore(options =>
-    {
-        options.ConfigureDbContext =
-            b => b.UseSqlServer(connectionString,
-                sql => sql.MigrationsAssembly(migrationAssembly));
-    })
-    //.AddInMemoryApiResources(Configuration.GetApiResources())
-    //.AddInMemoryClients(Configuration.GetClients())
-    //.AddInMemoryIdentityResources(Configuration.GetIdentityResources())
-    //.AddInMemoryApiScopes(Configuration.GetApiScopes())
-    .AddDeveloperSigningCredential();
 
 builder.Services.ConfigureApplicationCookie(config => 
 {
@@ -56,6 +12,8 @@ builder.Services.ConfigureApplicationCookie(config =>
 });
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbConnections();
 
 var app = builder.Build();
 

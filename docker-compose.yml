@@ -1,0 +1,107 @@
+version: '3.8'
+
+networks:
+  application:
+
+services:
+  db.postgres.api:
+    container_name: ApiDb
+    image: postgres
+    environment:
+      - POSTGRES_DB=ContactManagerApiDb
+      - POSTGRES_USER=postgres 
+      - POSTGRES_PASSWORD=12345
+    ports:
+      - "5432:5432"
+    volumes:
+      - './volumes/db/ApiPostgresDb:/var/lib/postgressql/data'
+    networks:
+      - application
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  db.postgres.auth:
+    container_name: AuthDb
+    image: postgres
+    environment:
+      - POSTGRES_DB=ContactManagerIdentityServerDb
+      - POSTGRES_USER=postgres 
+      - POSTGRES_PASSWORD=12345
+    ports:
+      - "5431:5432"
+    volumes:
+      - './volumes/db/AuthPostgresDb:/var/lib/postgressql/data'
+    networks:
+      - application  
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  auth.server:
+    container_name: IdentityServer
+    build:
+      context: .
+      dockerfile: IdentityServer/Dockerfile
+    ports:
+      - 10000:81
+    depends_on:
+      - db.postgres.auth
+    environment:
+      - DB_AUTH_HOST=db.postgres.auth
+      - DB_AUTH_NAME=ContactManagerIdentityServerDb
+      - DB_SA_PASSWORD=12345
+      - DB_AUTH_PORT=5432  
+      - USER_SECRETS_ID=e81b4714-b1ea-4dce-9430-a1f4992d9df5
+      - AdministratorPassword=$AdministratorPassword 
+    volumes:
+      - $APPDATA/Microsoft/UserSecrets/$USER_SECRETS_ID:/root/.microsoft/usersecrets/$USER_SECRETS_ID
+      - $HOME/.microsoft/usersecrets/$USER_SECRETS_ID:/root/.microsoft/usersecrets/$USER_SECRETS_ID 
+    networks:
+      - application
+
+  webapi:
+    container_name: Api
+    build:
+      context: .
+      dockerfile: Faliush.ContactManager.Api/Dockerfile
+    ports:
+      - 5000:80
+    depends_on:
+      - db.postgres.api
+      - auth.server
+    environment:
+      - DB_API_HOST=db.postgres.api
+      - DB_API_NAME=ContactManagerApiDb
+      - DB_SA_PASSWORD=12345
+      - DB_API_PORT=5432 
+    networks:
+      - application
+    # healthcheck:
+    #   test: curl --fail http://localhost:5000/healthz || exit 1
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+
+  # webui:
+  #   container_name: BlazorClient
+  #   build:
+  #     context: .
+  #     dockerfile: BlazorClient/Dockerfile
+  #   ports:
+  #     - 7000:82
+  #   depends_on:
+  #     - webapi
+  #     - auth.server
+  #   networks:
+  #     - application
+
+
+
+
