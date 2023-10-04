@@ -18,6 +18,11 @@ services:
     networks:
       - application
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   db.postgres.auth:
     container_name: AuthDb
@@ -33,6 +38,11 @@ services:
     networks:
       - application  
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   auth.server:
     container_name: IdentityServer
@@ -73,6 +83,11 @@ services:
       - DB_API_PORT=5432 
     networks:
       - application
+    # healthcheck:
+    #   test: curl --fail http://localhost:5000/healthz || exit 1
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
 
   # webui:
   #   container_name: BlazorClient
