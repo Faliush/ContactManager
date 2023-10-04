@@ -1,36 +1,38 @@
-version: '3.4'
+version: '3.8'
 
 networks:
   application:
 
 services:
-  db.mssqlserver.api:
+  db.postgres.api:
     container_name: ApiDb
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: postgres
     environment:
-      - SA_PASSWORD=Admin1234
-      - ACCEPT_EULA=Y
-      - MSSQL_PID=Express
+      - POSTGRES_DB=ContactManagerApiDb
+      - POSTGRES_USER=postgres 
+      - POSTGRES_PASSWORD=12345
     ports:
-      - "1433:1433"
+      - "5432:5432"
     volumes:
-      - './volumes/db/ApiSqlserver:/var/opt/mssql/data'
+      - './volumes/db/ApiPostgresDb:/var/lib/postgressql/data'
     networks:
       - application
-  
-  db.mssqlserver.auth:
+    restart: always
+
+  db.postgres.auth:
     container_name: AuthDb
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: postgres
     environment:
-      - SA_PASSWORD=Admin1234
-      - ACCEPT_EULA=Y
-      - MSSQL_PID=Express
+      - POSTGRES_DB=ContactManagerIdentityServerDb
+      - POSTGRES_USER=postgres 
+      - POSTGRES_PASSWORD=12345
     ports:
-      - "1411:1411"
+      - "5431:5432"
     volumes:
-      - './volumes/db/AuthSqlserver:/var/opt/mssql/data'
+      - './volumes/db/AuthPostgresDb:/var/lib/postgressql/data'
     networks:
       - application  
+    restart: always
 
   auth.server:
     container_name: IdentityServer
@@ -40,12 +42,17 @@ services:
     ports:
       - 10000:81
     depends_on:
-      - db.mssqlserver.auth
+      - db.postgres.auth
     environment:
-      - DB_AUTH_HOST=db.mssqlserver.auth
+      - DB_AUTH_HOST=db.postgres.auth
       - DB_AUTH_NAME=ContactManagerIdentityServerDb
-      - DB_SA_PASSWORD=Admin1234
-      - DB_AUTH_PORT=1411      
+      - DB_SA_PASSWORD=12345
+      - DB_AUTH_PORT=5432  
+      - USER_SECRETS_ID=e81b4714-b1ea-4dce-9430-a1f4992d9df5
+      - AdministratorPassword=$AdministratorPassword 
+    volumes:
+      - $APPDATA/Microsoft/UserSecrets/$USER_SECRETS_ID:/root/.microsoft/usersecrets/$USER_SECRETS_ID
+      - $HOME/.microsoft/usersecrets/$USER_SECRETS_ID:/root/.microsoft/usersecrets/$USER_SECRETS_ID 
     networks:
       - application
 
@@ -57,13 +64,13 @@ services:
     ports:
       - 5000:80
     depends_on:
-      - db.mssqlserver.api
+      - db.postgres.api
       - auth.server
     environment:
-      - DB_API_HOST=db.mssqlserver.api
+      - DB_API_HOST=db.postgres.api
       - DB_API_NAME=ContactManagerApiDb
-      - DB_SA_PASSWORD=Admin1234
-      - DB_API_PORT=1433
+      - DB_SA_PASSWORD=12345
+      - DB_API_PORT=5432 
     networks:
       - application
 

@@ -8,12 +8,12 @@ public class LayerConnectionDefinition : AppDefinition
 {
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
-        var dbHost = Environment.GetEnvironmentVariable("DB_API_HOST");
-        var dbName = Environment.GetEnvironmentVariable("DB_API_NAME");
-        var dbPort = Environment.GetEnvironmentVariable("DB_API_PORT");
-        var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
+        var dbHost = Environment.GetEnvironmentVariable("DB_API_HOST") ?? "localhost";
+        var dbName = Environment.GetEnvironmentVariable("DB_API_NAME") ?? "ContactManagerApiDb";
+        var dbPort = Environment.GetEnvironmentVariable("DB_API_PORT") ?? "5432";
+        var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD") ?? "12345";
 
-        var connStr = $"Server={dbHost},{dbPort};Initial Catalog={dbName};User Id=sa;Password={dbPassword}";
+        var connStr = $"Server={dbHost};Port={dbPort};Database={dbName};User ID=postgres;Password={dbPassword}";
         
         builder.Services.AddInfrastructureServices(connStr);
         builder.Services.AddCoreServices();

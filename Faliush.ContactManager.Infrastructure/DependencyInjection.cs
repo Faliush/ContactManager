@@ -10,7 +10,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<ApplicationDbContext>(
-            option => option.UseSqlServer(connectionString));
+            option => option.UseNpgsql(connectionString));
 
         services.AddScoped<IRepositoryFactory, UnitOfWork<ApplicationDbContext>>();
         services.AddScoped<IUnitOfWork<ApplicationDbContext>, UnitOfWork<ApplicationDbContext>>();

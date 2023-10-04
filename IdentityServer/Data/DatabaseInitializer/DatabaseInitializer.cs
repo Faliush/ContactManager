@@ -47,7 +47,7 @@ public static  class DatabaseInitializer
         if(!context!.Users.Any(u => u.Email == developer.Email))
         {
             var password = new PasswordHasher<ApplicationUser>();
-            var hashed = password.HashPassword(developer, configuration["Secret:AdministratorPassword"]);
+            var hashed = password.HashPassword(developer, configuration["AdministratorPassword"]);
             developer.PasswordHash = hashed;
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var resutl = await userManager.CreateAsync(developer);

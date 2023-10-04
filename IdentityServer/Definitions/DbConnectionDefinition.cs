@@ -9,19 +9,17 @@ public static class DbConnectionDefinition
 {
     public static IServiceCollection AddDbConnections(this IServiceCollection services)
     {
-        var dbHost = Environment.GetEnvironmentVariable("DB_AUTH_HOST");
-        var dbName = Environment.GetEnvironmentVariable("DB_AUTH_NAME");
-        var dbPort = Environment.GetEnvironmentVariable("DB_AUTH_PORT");
-        var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
+        var dbHost = Environment.GetEnvironmentVariable("DB_AUTH_HOST") ?? "localhost";
+        var dbName = Environment.GetEnvironmentVariable("DB_AUTH_NAME") ?? "ContactManagerIdentityServerDb";
+        var dbPort = Environment.GetEnvironmentVariable("DB_AUTH_PORT") ?? "5432";
+        var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD") ?? "12345";
 
-        var connectionString = $"Server={dbHost},{dbPort};Initial Catalog={dbName};User Id=sa;Password={dbPassword}";
+        var connectionString = $"Server={dbHost};Port={dbPort};Database={dbName};User ID=postgres;Password={dbPassword}";
         var migrationAssembly = typeof(Program).Assembly.GetName().Name;
-
-        
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseSqlServer(connectionString);
+            options.UseNpgsql(connectionString);
         })
             .AddIdentity<ApplicationUser, ApplicationRole>(config =>
             {
@@ -41,14 +39,14 @@ public static class DbConnectionDefinition
             .AddConfigurationStore(options =>
             {
                 options.ConfigureDbContext =
-                    b => b.UseSqlServer(connectionString,
+                    b => b.UseNpgsql(connectionString,
                         sql => sql.MigrationsAssembly(migrationAssembly));
 
             })
             .AddOperationalStore(options =>
             {
                 options.ConfigureDbContext =
-                    b => b.UseSqlServer(connectionString,
+                    b => b.UseNpgsql(connectionString,
                         sql => sql.MigrationsAssembly(migrationAssembly));
             })
             .AddDeveloperSigningCredential();
