@@ -1,0 +1,10 @@
+global using Xunit;
+global using FluentAssertions;
+global using Moq;
+global using AutoFixture;
+global using Faliush.ContactManager.Core.Exceptions;
+global using Faliush.ContactManager.Core.Logic.CountryLogic.Queries;
+global using Faliush.ContactManager.Core.Logic.CountryLogic.ViewModels;
+global using Faliush.ContactManager.Infrastructure.UnitOfWork;
+global using Faliush.ContactManager.Models;
+global using System.Linq.Expressions;
