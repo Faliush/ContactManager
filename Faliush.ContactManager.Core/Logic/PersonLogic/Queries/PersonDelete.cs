@@ -35,7 +35,11 @@ public class PersonDeleteRequestHandler : IRequestHandler<PersonDeleteRequest, O
         await _unitOfWork.SaveChangesAsync();
 
         if (!_unitOfWork.LastSaveChangeResult.IsOk)
-            throw new ContactManagerSaveDatabaseException("database saving error", _unitOfWork.LastSaveChangeResult.Exception);
+        {
+            var exception = _unitOfWork.LastSaveChangeResult.Exception ?? new ContactManagerSaveDatabaseException();
+            operation.AddError(exception);
+            return operation;
+        }
 
         operation.Result = entity.Id;
 

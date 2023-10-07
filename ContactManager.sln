@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorClient", "BlazorClien
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{7E8FC659-4A3D-48F5-9DEB-876C79A871FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faliush.ContactManager.UnitTests", "Faliush.ContactManager.UnitTests\Faliush.ContactManager.UnitTests.csproj", "{76BB6B6C-0812-4804-B031-582A3A804E5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{7E8FC659-4A3D-48F5-9DEB-876C79A871FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E8FC659-4A3D-48F5-9DEB-876C79A871FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E8FC659-4A3D-48F5-9DEB-876C79A871FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76BB6B6C-0812-4804-B031-582A3A804E5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76BB6B6C-0812-4804-B031-582A3A804E5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76BB6B6C-0812-4804-B031-582A3A804E5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76BB6B6C-0812-4804-B031-582A3A804E5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{3655E628-15E5-4E2F-B219-1957B69A5679} = {1C985AC4-99A4-4251-B13D-494FF4CB732E}
 		{33381083-AFEE-45A3-8A2A-31E489D5CB03} = {81500BDF-2CD8-4478-B582-C72AAA5D0909}
 		{2299AEFF-180B-4E15-BB24-CEAB867688D4} = {C3312976-FB38-40CC-941A-AAC11E40CCF8}
+		{76BB6B6C-0812-4804-B031-582A3A804E5F} = {ED772976-76D5-4039-82D6-04655952A250}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {845FD1E0-9A73-429E-B536-A9C154447A08}
