@@ -12,19 +12,14 @@ public class PersonEndpoints : AppDefinition
 {
     public override void ConfigureApplication(WebApplication app)
     {
-        app.MapGet("api/people", GetAllPeople);
         app.MapGet("api/people/filtered", GetFilteredPeople);
         app.MapGet("api/people/{id:guid}", GetPersonById);
-        app.MapGet("api/people/create", GetForCreate);
         app.MapPost("api/people", CreatePerson);
         app.MapDelete("api/people/{id:guid}", DeletePerson);
         app.MapGet("api/people/update/{id:guid}", GetPersonForUpdate);
         app.MapPut("api/people", PutAfterUpdatePerson);
         app.MapGet("api/people/filtered/{pageIndex:int}", GetFilteredPagedPeople);
     }
-
-    private async Task<OperationResult<List<PeopleViewModel>>> GetAllPeople(IMediator mediator, HttpContext context) =>
-        await mediator.Send(new PersonGetAllRequest(), context.RequestAborted);
 
     private async Task<OperationResult<List<PeopleViewModel>>> GetFilteredPeople(
         IMediator mediator,
@@ -56,9 +51,6 @@ public class PersonEndpoints : AppDefinition
     private async Task<OperationResult<PersonViewModel>> GetPersonById(Guid id, IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonGetByIdRequest(id), context.RequestAborted);
 
-    [Authorize]
-    private async Task<OperationResult<PersonCreateViewModel>> GetForCreate(IMediator mediator, HttpContext context) =>
-        await mediator.Send(new PersonGetForCreateRequest(), context.RequestAborted);
 
     [Authorize]
     private async Task<OperationResult<PersonViewModel>> CreatePerson(PersonCreateViewModel viewModel, IMediator mediator, HttpContext context) =>

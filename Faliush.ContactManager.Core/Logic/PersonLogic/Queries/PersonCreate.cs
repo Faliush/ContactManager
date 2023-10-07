@@ -38,6 +38,17 @@ public class PersonCreateRequestHandler : IRequestHandler<PersonCreateRequest, O
         var operation = new OperationResult<PersonViewModel>();
         var repository = _unitOfWork.GetRepository<Person>();
 
+        var item = await repository.GetFirstOrDefaultAsync
+            (
+                predicate: x => x.Email == request.Model.Email
+            );
+
+        if (item is not null)
+        {
+            operation.AddError(new ContactManagerArgumentException($"person with email {request.Model.Email} already exist"));
+            return operation;
+        }
+
         var entity = _mapper.Map<Person>(request.Model, x => x.Items[nameof(IdentityUser)] = request.User.Identity!.Name);
         entity.Gender = _stringConvertService.ConvertToEnum<GenderOptions>(request.Model.Gender);
 

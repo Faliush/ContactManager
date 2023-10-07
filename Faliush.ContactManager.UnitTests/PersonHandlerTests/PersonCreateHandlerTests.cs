@@ -61,7 +61,7 @@ public class PersonCreateHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Country>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Country, bool>>>(), default, default, default, default, default))
              .ReturnsAsync(null as Country);
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, default, default, default))
-            .ReturnsAsync(_fixture.Build<Person>().With(x => x.Country, null as Country).Create());
+            .ReturnsAsync(null as Person);
 
         var handler = new PersonCreateRequestHandler(_unitOfWorkMock.Object, _mapper, _stringConverterServiceMock.Object, _dateCalculatorMock.Object);
 
