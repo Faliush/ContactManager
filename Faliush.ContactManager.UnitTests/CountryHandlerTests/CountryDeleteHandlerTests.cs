@@ -13,7 +13,7 @@ public class CountryDeleteHandlerTests
 
     [Fact]
     [Trait("DeleteHandleTests", nameof(Country))]
-    public async Task Handler_Should_ThrowContactManagerNotFoundException_WhenCountryIdIsNotExistForDelete()
+    public async Task CountryDeleteRequestHandler_Should_ThrowContactManagerNotFoundException_WhenCountryIdIsNotExistForDelete()
     {
         var countryId = Guid.Parse("1932C678-E513-4349-8458-77EADA874B94");
         var request = new CountryDeleteRequest(countryId);
@@ -30,7 +30,7 @@ public class CountryDeleteHandlerTests
 
     [Fact]
     [Trait("DeleteHandleTests", nameof(Country))]
-    public async Task Handler_Should_ReturnSuccessResult_WhenIdIsCorrectForDelete()
+    public async Task CountryDeleteRequestHandler_Should_ReturnSuccessResult_WhenIdIsCorrectForDelete()
     {
         var country = _fixture.Build<Country>().With(x => x.People, null as List<Person>).Create();
         var request = new CountryDeleteRequest(country.Id);

@@ -13,7 +13,7 @@ public class CountryUpdateHandlerTests
 
     [Fact]
     [Trait("UpdateHandleTests", nameof(Country))]
-    public async Task Handler_Should_ThrowContactManagerNotFoundException_WhenCountryIdForUpdateIsNotCorrect()
+    public async Task CountryUpdateRequestHandler_Should_ThrowContactManagerNotFoundException_WhenCountryIdForUpdateIsNotCorrect()
     {
         var country = _fixture.Build<CountryUpdateViewModel>().Create();
         var request = new CountryUpdateRequest(country);
@@ -30,7 +30,7 @@ public class CountryUpdateHandlerTests
 
     [Fact]
     [Trait("UpdateHandleTests", nameof(Country))]
-    public async Task Handler_Should_ReturnSuccessResult_WhenIdAndNameCorrectForUpdating()
+    public async Task CountryUpdateRequestHandler_Should_ReturnSuccessResult_WhenIdAndNameCorrectForUpdating()
     {
         var country = _fixture.Build<CountryUpdateViewModel>().Create();
         var expected = new CountryViewModel() { Id = country.Id, Name = country.Name };
