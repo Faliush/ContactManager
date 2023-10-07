@@ -1,10 +1,12 @@
 ﻿using Faliush.ContactManager.Api.Definitions.Base;
 using Faliush.ContactManager.Core.Common.OperationResult;
+using Faliush.ContactManager.Core.Enums;
 using Faliush.ContactManager.Core.Logic.PersonLogic.Queries;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Data.SqlClient;
 
 namespace Faliush.ContactManager.Api.Endpoints.PersonEndpoints;
 
@@ -27,7 +29,7 @@ public class PersonEndpoints : AppDefinition
         string? searchBy,
         string? searchString,
         string sortBy = "LastName",
-        string sortOrder = "Asc") =>
+        SortOptions sortOrder = SortOptions.Asc) =>
             await mediator.Send(new PersonGetFilteredRequest(searchBy, searchString, sortBy, sortOrder), context.RequestAborted);
 
     private async Task<OperationResult<IPagedList<PeopleViewModel>>> GetFilteredPagedPeople(
@@ -38,7 +40,7 @@ public class PersonEndpoints : AppDefinition
         string? searchBy,
         string? searchString,
         string sortBy = "LastName",
-        string sortOrder = "Asc") =>
+        SortOptions sortOrder = SortOptions.Asc) =>
             await mediator.Send(new PersonGetFilteredPagedRequest(
                 pageIndex, 
                 configuration.GetValue<int>("PageSize"), 

@@ -1,4 +1,5 @@
 ﻿@page "/person/update/{PersonId:guid}"
+@using BlazorClient.Enums;
 <PageTitle>Update Person</PageTitle>
 @attribute [Authorize]
 @inherits UpdatePersonComponentModel
@@ -51,15 +52,15 @@
                         <div class="col-md-12 mb-3">
                             <label class="labels me-2">Gender:</label>
                             <InputRadioGroup @bind-Value="PersonResult.Gender">
-                                @foreach (var item in ListResult.Genders)
+                                @foreach (var item in (GenderOptions[])Enum.GetValues<GenderOptions>())
                                 {
                                     @if(PersonResult.Gender == item)
                                     {
-                                        <InputRadio Value="@item" checked="checked" />
+                                       <InputRadio Value="item" checked="checked" />
                                     }
                                     else
                                     {
-                                       <InputRadio  Value="@item" />
+                                       <InputRadio Value="item" />
                                     }
                                     <span class="labels me-2">@item</span>
                                 }
@@ -68,8 +69,7 @@
                         <div class="col-md-12 d-flex align-items-center mb-3">
                             <label class="labels me-2">Country:</label>
                             <InputSelect @bind-Value="PersonResult.CountryId" class="dropdown dropdown-toggle btn btn-secondary btn-sm">
-                                <option value="" selected="selected">None</option>
-                                @foreach (var item in ListResult.Countries)
+                                @foreach (var item in CountriesDTO.Result)
                                 {
                                     if (item.Id == PersonResult.CountryId)
                                     {
@@ -82,6 +82,7 @@
                                 }
                             </InputSelect>
                         </div>
+                        <ValidationMessage For="@(() => PersonResult.CountryId)" />
                         <div class="col-md-12">
                             <label class="labels">Address:</label>
                             <InputTextArea @bind-Value="PersonResult.Address" placeholder="enter your address" style="width: 100%"></InputTextArea>

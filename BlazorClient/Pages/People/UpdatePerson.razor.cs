@@ -14,24 +14,24 @@ public class UpdatePersonComponentModel : ComponentBase
     [Parameter] public Guid PersonId { get; set; }
 
     protected UpdatePersonResult? PersonResult { get; set; }
-    protected GetForCreatePersonResult? ListResult { get; set; }
+    protected CountriesDTO? CountriesDTO { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         var personResult = await HttpClient.GetFromJsonAsync<UpdatePersonDTO>($"people/update/{PersonId}");
-        var listResult = await HttpClient.GetFromJsonAsync<GetForCreatePersonDTO>("people/create");
+        var listCountries = await HttpClient.GetFromJsonAsync<CountriesDTO>("countries");
 
-        if (personResult is null || listResult is null)
+        if (personResult is null || listCountries is null)
             NavigationManager.NavigateTo("/error");
 
         if (!personResult!.Ok)
             NavigationManager.NavigateTo($"/error/{personResult.Exception["message"]}/{personResult.Metadata["message"]}");
 
-        if (!listResult!.Ok)
-            NavigationManager.NavigateTo($"/error/{listResult.Exception["message"]}/{listResult.Metadata["message"]}");
+        if (!listCountries!.Ok)
+            NavigationManager.NavigateTo($"/error/{listCountries.Exception["message"]}/{listCountries.Metadata["message"]}");
 
         PersonResult = personResult.Result;
-        ListResult = listResult.Result;
+        CountriesDTO = listCountries;
     }
 
     protected async Task ValidSubmit()

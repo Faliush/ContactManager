@@ -6,7 +6,6 @@ namespace Faliush.ContactManager.UnitTests.PersonHandlerTests;
 public class PersonGetHandlerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-    private readonly Mock<IStringConvertService> _stringConverterServiceMock;
     private readonly Mock<IDateCalcualtorService> _dateCalculatorMock;
     private readonly IFixture _fixture;
     private readonly IMapper _mapper;
@@ -15,7 +14,6 @@ public class PersonGetHandlerTests
     {
         _fixture = new Fixture();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
-        _stringConverterServiceMock = new Mock<IStringConvertService>();
         _dateCalculatorMock = new Mock<IDateCalcualtorService>();
 
         if (_mapper == null)
@@ -35,7 +33,7 @@ public class PersonGetHandlerTests
     public async Task PersonGetFilteredRequestHandler_Should_ReturnSomePeople_WhenDatabaseIsNotEmpty()
     {
         var sortBy = "LastName";
-        var sortOrder = "Asc";
+        var sortOrder = SortOptions.Asc;
         var request = new PersonGetFilteredRequest(null, null,sortBy, sortOrder);
 
         var people = new List<Person>()
@@ -47,12 +45,11 @@ public class PersonGetHandlerTests
 
         var expected = people.Select(x => new PeopleViewModel() { Id = x.Id, Email = x.Email, FirstName = x.FirstName, LastName = x.LastName }).ToList();
 
-        _stringConverterServiceMock.Setup(x => x.ConvertToEnum<SortOptions>(It.IsAny<string>())).Returns(SortOptions.Asc);
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>()
             .GetAllAsync(It.IsAny<Expression<Func<Person, bool>>>(), It.IsAny<Func<IQueryable<Person>, IOrderedQueryable<Person>>>(), default, default, default, default))
             .ReturnsAsync(people);
 
-        var handler = new PersonGetFilteredRequestHandler(_unitOfWorkMock.Object, _mapper, _stringConverterServiceMock.Object);
+        var handler = new PersonGetFilteredRequestHandler(_unitOfWorkMock.Object, _mapper);
 
         var result = await handler.Handle(request, default);
 
@@ -68,7 +65,7 @@ public class PersonGetHandlerTests
         var indexPage = 0;
         var pageSize = 10;
         var sortBy = "LastName";
-        var sortOrder = "Asc";
+        var sortOrder = SortOptions.Asc;
         var request = new PersonGetFilteredPagedRequest(indexPage, pageSize, null, null, sortBy, sortOrder);
 
         var people = new List<Person>()
@@ -80,7 +77,6 @@ public class PersonGetHandlerTests
 
         var expected = people.Select(x => new PeopleViewModel() { Id = x.Id, Email = x.Email, FirstName = x.FirstName, LastName = x.LastName }).ToPagedList(indexPage, pageSize);
 
-        _stringConverterServiceMock.Setup(x => x.ConvertToEnum<SortOptions>(It.IsAny<string>())).Returns(SortOptions.Asc);
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>()
             .GetPagedListAsync(
                 It.IsAny<Expression<Func<Person, bool>>>(), 
@@ -93,7 +89,7 @@ public class PersonGetHandlerTests
                 default))
             .ReturnsAsync(people.ToPagedList(indexPage, pageSize));
 
-        var handler = new PersonGetFilteredPagedRequestHandler(_unitOfWorkMock.Object, _mapper, _stringConverterServiceMock.Object);
+        var handler = new PersonGetFilteredPagedRequestHandler(_unitOfWorkMock.Object, _mapper);
 
         var result = await handler.Handle(request, default);
 
@@ -188,7 +184,7 @@ public class PersonGetHandlerTests
             Email = person.Email,
             Phone = person.Phone,
             Address = person.Address,
-            Gender = person.Gender.ToString(),
+            Gender = person.Gender,
             CountryId = person.CountryId
         };
 

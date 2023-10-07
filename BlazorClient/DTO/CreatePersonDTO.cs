@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BlazorClient.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlazorClient.DTO;
 
@@ -26,7 +27,7 @@ public class CreatePersonDTO
     public DateTime DateOfBirth { get; set; }
 
     [Required]
-    public string Gender { get; set; }
+    public GenderOptions Gender { get; set; }
 
     [MaxLength(80)]
     public string Address { get; set; }
