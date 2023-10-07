@@ -1,10 +1,12 @@
 ﻿using Faliush.ContactManager.Api.Definitions.Base;
 using Faliush.ContactManager.Core.Common.OperationResult;
+using Faliush.ContactManager.Core.Enums;
 using Faliush.ContactManager.Core.Logic.PersonLogic.Queries;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Data.SqlClient;
 
 namespace Faliush.ContactManager.Api.Endpoints.PersonEndpoints;
 
@@ -12,10 +14,8 @@ public class PersonEndpoints : AppDefinition
 {
     public override void ConfigureApplication(WebApplication app)
     {
-        app.MapGet("api/people", GetAllPeople);
         app.MapGet("api/people/filtered", GetFilteredPeople);
         app.MapGet("api/people/{id:guid}", GetPersonById);
-        app.MapGet("api/people/create", GetForCreate);
         app.MapPost("api/people", CreatePerson);
         app.MapDelete("api/people/{id:guid}", DeletePerson);
         app.MapGet("api/people/update/{id:guid}", GetPersonForUpdate);
@@ -23,16 +23,13 @@ public class PersonEndpoints : AppDefinition
         app.MapGet("api/people/filtered/{pageIndex:int}", GetFilteredPagedPeople);
     }
 
-    private async Task<OperationResult<List<PeopleViewModel>>> GetAllPeople(IMediator mediator, HttpContext context) =>
-        await mediator.Send(new PersonGetAllRequest(), context.RequestAborted);
-
     private async Task<OperationResult<List<PeopleViewModel>>> GetFilteredPeople(
         IMediator mediator,
         HttpContext context,
         string? searchBy,
         string? searchString,
         string sortBy = "LastName",
-        string sortOrder = "Asc") =>
+        SortOptions sortOrder = SortOptions.Asc) =>
             await mediator.Send(new PersonGetFilteredRequest(searchBy, searchString, sortBy, sortOrder), context.RequestAborted);
 
     private async Task<OperationResult<IPagedList<PeopleViewModel>>> GetFilteredPagedPeople(
@@ -43,7 +40,7 @@ public class PersonEndpoints : AppDefinition
         string? searchBy,
         string? searchString,
         string sortBy = "LastName",
-        string sortOrder = "Asc") =>
+        SortOptions sortOrder = SortOptions.Asc) =>
             await mediator.Send(new PersonGetFilteredPagedRequest(
                 pageIndex, 
                 configuration.GetValue<int>("PageSize"), 
@@ -56,9 +53,6 @@ public class PersonEndpoints : AppDefinition
     private async Task<OperationResult<PersonViewModel>> GetPersonById(Guid id, IMediator mediator, HttpContext context) =>
         await mediator.Send(new PersonGetByIdRequest(id), context.RequestAborted);
 
-    [Authorize]
-    private async Task<OperationResult<PersonCreateViewModel>> GetForCreate(IMediator mediator, HttpContext context) =>
-        await mediator.Send(new PersonGetForCreateRequest(), context.RequestAborted);
 
     [Authorize]
     private async Task<OperationResult<PersonViewModel>> CreatePerson(PersonCreateViewModel viewModel, IMediator mediator, HttpContext context) =>

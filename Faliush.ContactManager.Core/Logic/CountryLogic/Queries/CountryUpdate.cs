@@ -20,6 +20,17 @@ public class CountryUpdateRequestHandler : IRequestHandler<CountryUpdateRequest,
         var operation = new OperationResult<CountryViewModel>();
         var repository = _unitOfWork.GetRepository<Country>();
 
+        var item = await repository.GetFirstOrDefaultAsync
+            (
+                predicate: x => x.Name == request.Model.Name && x.Id != request.Model.Id
+            );
+
+        if(item is not null)
+        {
+            operation.AddError(new ContactManagerArgumentException($"country with name {request.Model.Name} already exist"));
+            return operation;
+        }
+
         var entity = await repository.GetFirstOrDefaultAsync
             (
                 predicate: x => x.Id == request.Model.Id

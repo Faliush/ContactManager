@@ -1,4 +1,5 @@
 ﻿@page "/person/create"
+@using BlazorClient.Enums;
 <PageTitle>Create Person</PageTitle>
 @attribute [Authorize]
 @inherits CreatePersonComponentModel
@@ -52,9 +53,9 @@
                             <div class="col-md-12 mb-3">
                                 <label class="labels me-2">Gender:</label>
                                 <InputRadioGroup @bind-Value="Model.Gender">
-                                    @foreach(var item in Result.Genders)
+                                    @foreach(var item in (GenderOptions[])Enum.GetValues<GenderOptions>() )
                                     {
-                                        <InputRadio Value="@item" />
+                                        <InputRadio Value="item" />
                                         <span class="labels me-2">@item</span>
                                     }
                                 </InputRadioGroup>
@@ -62,8 +63,8 @@
                             <div class="col-md-12 d-flex align-items-center mb-3">
                                 <label class="labels me-2">Country:</label>
                                 <InputSelect @bind-Value="Model.CountryId" class="dropdown dropdown-toggle btn btn-secondary btn-sm">
-                                    <option value="" selected="selected">None</option>
-                                    @foreach(var item in Result.Countries)
+                                    <option value="" selected="selected">Choose your country</option>
+                                    @foreach(var item in Response.Result)
                                     {
                                             if (item.Id == Model.CountryId)
                                             {
@@ -76,6 +77,7 @@
                                     }
                                 </InputSelect>
                             </div>
+                            <ValidationMessage For="@(() => Model.CountryId)" />
                             <div class="col-md-12">
                                 <label class="labels">Address:</label>
                                 <InputTextArea @bind-Value="Model.Address" placeholder="enter your address" style="width: 100%"></InputTextArea>

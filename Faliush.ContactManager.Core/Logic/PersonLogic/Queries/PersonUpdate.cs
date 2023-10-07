@@ -5,7 +5,6 @@ using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using Faliush.ContactManager.Core.Services;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
-using Faliush.ContactManager.Models.Base;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
@@ -19,17 +18,14 @@ public class PersonUpdateRequestHandler : IRequestHandler<PersonUpdateRequest, O
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IStringConvertService _stringConvertService;
     private readonly IDateCalcualtorService _dateCalcualtorService;
     public PersonUpdateRequestHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper, 
-        IStringConvertService stringConvertService, 
         IDateCalcualtorService dateCalcualtorService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _stringConvertService = stringConvertService;
         _dateCalcualtorService = dateCalcualtorService;
     }
 
@@ -37,6 +33,18 @@ public class PersonUpdateRequestHandler : IRequestHandler<PersonUpdateRequest, O
     {
         var operation = new OperationResult<PersonViewModel>();
         var repository = _unitOfWork.GetRepository<Person>();
+
+        var item = await repository
+            .GetFirstOrDefaultAsync
+            (
+                predicate: x => x.Email == request.Model.Email && x.Id != request.Model.Id
+            );
+
+        if (item is not null)
+        {
+            operation.AddError(new ContactManagerArgumentException($"person with email {request.Model.Email} already exist"));
+            return operation;
+        }
 
         var entity = await repository
             .GetFirstOrDefaultAsync
@@ -64,7 +72,6 @@ public class PersonUpdateRequestHandler : IRequestHandler<PersonUpdateRequest, O
         }
 
         _mapper.Map(request.Model, entity, x => x.Items[nameof(IdentityUser)] = request.User.Identity!.Name);
-        entity.Gender = _stringConvertService.ConvertToEnum<GenderOptions>(request.Model.Gender);
 
         repository.Update(entity);
         await _unitOfWork.SaveChangesAsync();

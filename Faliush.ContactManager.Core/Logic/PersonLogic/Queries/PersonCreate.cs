@@ -5,7 +5,6 @@ using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using Faliush.ContactManager.Core.Services;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
-using Faliush.ContactManager.Models.Base;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
@@ -18,18 +17,15 @@ public class PersonCreateRequestHandler : IRequestHandler<PersonCreateRequest, O
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IStringConvertService _stringConvertService;
     private readonly IDateCalcualtorService _dateCalcualtorService;
 
     public PersonCreateRequestHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper, 
-        IStringConvertService stringConvertService,
         IDateCalcualtorService dateCalcualtorService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _stringConvertService = stringConvertService;
         _dateCalcualtorService = dateCalcualtorService;
     }
 
@@ -38,8 +34,18 @@ public class PersonCreateRequestHandler : IRequestHandler<PersonCreateRequest, O
         var operation = new OperationResult<PersonViewModel>();
         var repository = _unitOfWork.GetRepository<Person>();
 
+        var item = await repository.GetFirstOrDefaultAsync
+            (
+                predicate: x => x.Email == request.Model.Email
+            );
+
+        if (item is not null)
+        {
+            operation.AddError(new ContactManagerArgumentException($"person with email {request.Model.Email} already exist"));
+            return operation;
+        }
+
         var entity = _mapper.Map<Person>(request.Model, x => x.Items[nameof(IdentityUser)] = request.User.Identity!.Name);
-        entity.Gender = _stringConvertService.ConvertToEnum<GenderOptions>(request.Model.Gender);
 
         var country = await _unitOfWork.GetRepository<Country>()
             .GetFirstOrDefaultAsync

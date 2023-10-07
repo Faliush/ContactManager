@@ -1,6 +1,5 @@
 ﻿using BlazorBootstrap;
 using BlazorClient.DTO;
-using BlazorClient.DTO.Results;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 
@@ -11,12 +10,12 @@ public class CreatePersonComponentModel : ComponentBase
 	[Inject] HttpClient HttpClient { get; set; }
 	[Inject] NavigationManager NavigationManager { get; set; }
 
-	protected GetForCreatePersonResult? Result { get; set; }
+	protected CountriesDTO? Response { get; set; }
 	protected CreatePersonDTO Model { get; set; } = new();
 
 	protected override async Task OnInitializedAsync()
 	{
-		var result = await HttpClient.GetFromJsonAsync<GetForCreatePersonDTO>("people/create");
+		var result = await HttpClient.GetFromJsonAsync<CountriesDTO>("countries");
 
 		if (result is null)
 			NavigationManager.NavigateTo("/error");
@@ -27,7 +26,7 @@ public class CreatePersonComponentModel : ComponentBase
             NavigationManager.NavigateTo($"/error/{result.Exception["message"]}/{result.Metadata["message"]}");
         }
 
-		Result = result!.Result;
+		Response = result;
 	}
 
 	protected async Task ValidSubmit()
