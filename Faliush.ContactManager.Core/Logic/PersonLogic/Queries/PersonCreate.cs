@@ -47,6 +47,12 @@ public class PersonCreateRequestHandler : IRequestHandler<PersonCreateRequest, O
                 predicate: x => x.Id == request.Model.CountryId
             );
 
+        if (country is null)
+        {
+            operation.AddError(new ContactManagerNotFoundException($"country with id {request.Model.CountryId} doesn't exist"));
+            return operation;
+        }
+
         await repository.InsertAsync(entity, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
 
@@ -59,8 +65,7 @@ public class PersonCreateRequestHandler : IRequestHandler<PersonCreateRequest, O
 
         var result = _mapper.Map<PersonViewModel>(entity);
         result.Age = _dateCalcualtorService.GetTotalYears(result.DateOfBirth);
-        if(country is not null)
-            result.CountryName = country.Name;
+        result.CountryName = country.Name;
 
         operation.Result = result;
 

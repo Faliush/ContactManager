@@ -9,8 +9,8 @@ public class ApplicationDbContext : DbContextBase
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) => 
         base.Database.EnsureCreated();
 
-    public virtual DbSet<Person> People => Set<Person>(); // 
-    public virtual DbSet<Country> Countries => Set<Country>(); //
+    public virtual DbSet<Person> People { get; set; }  
+    public virtual DbSet<Country> Countries { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

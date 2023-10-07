@@ -30,6 +30,8 @@ public class CreatePersonDTO
 
     [MaxLength(80)]
     public string Address { get; set; }
+
+    [Required]
     public Guid? CountryId { get; set; }
 }
 

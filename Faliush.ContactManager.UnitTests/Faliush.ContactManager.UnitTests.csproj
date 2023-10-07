@@ -32,4 +32,8 @@
     <ProjectReference Include="..\Faliush.ContactManager.Infrastructure\Faliush.ContactManager.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ServiceTests\" />
+  </ItemGroup>
+
 </Project>

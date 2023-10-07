@@ -19,7 +19,6 @@ public class CountryCreateHandlerTest
         var countryCreateViewModel = _fixture.Build<CountryCreateViewModel>().With(x => x.Name, "country").Create();
         var request = new CountryCreateRequest(countryCreateViewModel);
 
-        _unitOfWorkMock.Setup(x => x.LastSaveChangeResult).Returns(new SaveChangesResult());
         _unitOfWorkMock.Setup(x => x.GetRepository<Country>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Country, bool>>>(), default, default, default, default, default))
              .ReturnsAsync(new Country() { Name = "country" });
 

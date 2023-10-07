@@ -18,7 +18,6 @@ public class CountryUpdateHandlerTests
         var country = _fixture.Build<CountryUpdateViewModel>().Create();
         var request = new CountryUpdateRequest(country);
 
-        _unitOfWorkMock.Setup(x => x.LastSaveChangeResult).Returns(new SaveChangesResult());
         _unitOfWorkMock.Setup(x => x.GetRepository<Country>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Country, bool>>>(), default, default, default, default, default))
              .ReturnsAsync(null as Country);
 
@@ -47,4 +46,6 @@ public class CountryUpdateHandlerTests
 
         result.Result.Should().BeEquivalentTo(expected);
     }
+
+    //create unit test when name is already taken 
 }
