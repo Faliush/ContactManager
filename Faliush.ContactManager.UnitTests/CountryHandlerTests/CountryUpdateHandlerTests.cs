@@ -47,7 +47,7 @@ public class CountryUpdateHandlerTests
 
     [Fact]
     [Trait("UpdateHandleTests", nameof(Country))]
-    public async Task CountryUpdateRequestHandler_Should_ReturnSuccessResult_WhenIdAndNameCorrectForUpdating()
+    public async Task CountryUpdateRequestHandler_Should_ReturnSuccessResult_WhenIdAndNameCorrect()
     {
         var country = _fixture.Build<CountryUpdateViewModel>().Create();
         var expected = new CountryViewModel() { Id = country.Id, Name = country.Name };

@@ -13,7 +13,7 @@ public class CountryCreateHandlerTest
 
     [Fact]
     [Trait("CreateHandleTests", nameof(Country))]
-    public async Task CountryCreateRequestHandler_Should_ThrowContactManagerArgumentException_WhenCountryNameIsAlreadyExist()
+    public async Task CountryCreateRequestHandler_Should_ThrowContactManagerArgumentException_WhenCountryNameAlreadyExists()
     {
         // arrrange 
         var countryCreateViewModel = _fixture.Build<CountryCreateViewModel>().With(x => x.Name, "country").Create();
