@@ -27,7 +27,7 @@ public class CountryGetHandlerTests
 
     [Fact]
     [Trait("GetHandleTests", nameof(Country))]
-    public async Task CountryGetAllRequestHandler_Should_ReturnEmptyResult_WhenCountriesIsNotExistInDatabase()
+    public async Task CountryGetAllRequestHandler_Should_ReturnEmptyResult_WhenCountriesDoesNotExistInDatabase()
     {
         //arrange
         var request = new CountryGetAllRequest();
@@ -75,7 +75,7 @@ public class CountryGetHandlerTests
 
     [Fact]
     [Trait("GetHandleTests", nameof(Country))]
-    public async Task CountryGetForUpdateRequestHandler_Should_ThrowContactManagerNotFoundException_WhenCountryIdIsNotExistForUpdate()
+    public async Task CountryGetForUpdateRequestHandler_Should_ThrowContactManagerNotFoundException_WhenCountryIdDoesNotExist()
     {
         var countryId = Guid.Parse("1932C678-E513-4349-8458-77EADA874B94");
         var request = new CountryGetForUpdateRequest(countryId);
@@ -92,7 +92,7 @@ public class CountryGetHandlerTests
 
     [Fact]
     [Trait("GetHandleTests", nameof(Country))]
-    public async Task CountryGetForUpdateRequestHandler_Should_ReturnSuccessResult_WhenIdIsCorrectForUpdate()
+    public async Task CountryGetForUpdateRequestHandler_Should_ReturnSuccessResult_WhenIdIsCorrect()
     {
         var country = _fixture.Build<Country>().With(x => x.People, null as List<Person>).Create();
         var expected = new CountryUpdateViewModel() { Id = country.Id, Name = country.Name };
