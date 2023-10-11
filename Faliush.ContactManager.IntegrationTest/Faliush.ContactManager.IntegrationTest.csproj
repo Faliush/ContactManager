@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ContactManager\Faliush.ContactManager.Api\Faliush.ContactManager.Api.csproj" />
+    <ProjectReference Include="..\Faliush.ContactManager.Api\Faliush.ContactManager.Api.csproj" />
   </ItemGroup>
 
 </Project>
