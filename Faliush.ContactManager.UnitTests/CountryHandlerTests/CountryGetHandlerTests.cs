@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using Faliush.ContactManager.Core.Mappers;
-
-namespace Faliush.ContactManager.UnitTests.CountryHandlerTests;
+﻿namespace Faliush.ContactManager.UnitTests.CountryHandlerTests;
 
 public class CountryGetHandlerTests
 {

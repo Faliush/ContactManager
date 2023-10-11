@@ -1,4 +1,6 @@
-﻿namespace Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
+﻿using System.Text.Json.Serialization;
+
+namespace Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
 
 /// <summary>
 /// Provides some help methods for <see cref="IPagedList{T}"/> interface.
@@ -206,7 +208,7 @@ public class PagedList<T> : IPagedList<T>
     /// <param name="pageIndex">The index of the page.</param>
     /// <param name="pageSize">The size of the page.</param>
     /// <param name="indexFrom">The index from.</param>
-    internal PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int indexFrom)
+    public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int indexFrom)
     {
         if (indexFrom > pageIndex)
         {
