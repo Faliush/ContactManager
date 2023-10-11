@@ -6,7 +6,6 @@ using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Data.SqlClient;
 
 namespace Faliush.ContactManager.Api.Endpoints.PersonEndpoints;
 
@@ -15,12 +14,12 @@ public class PersonEndpoints : AppDefinition
     public override void ConfigureApplication(WebApplication app)
     {
         app.MapGet("api/people/filtered", GetFilteredPeople);
+        app.MapGet("api/people/filtered/{pageIndex:int}", GetFilteredPagedPeople);
         app.MapGet("api/people/{id:guid}", GetPersonById);
         app.MapPost("api/people", CreatePerson);
         app.MapDelete("api/people/{id:guid}", DeletePerson);
         app.MapGet("api/people/update/{id:guid}", GetPersonForUpdate);
         app.MapPut("api/people", PutAfterUpdatePerson);
-        app.MapGet("api/people/filtered/{pageIndex:int}", GetFilteredPagedPeople);
     }
 
     private async Task<OperationResult<List<PeopleViewModel>>> GetFilteredPeople(
