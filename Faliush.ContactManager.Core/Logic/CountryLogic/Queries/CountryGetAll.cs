@@ -4,6 +4,7 @@ using Faliush.ContactManager.Core.Logic.CountryLogic.ViewModels;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Faliush.ContactManager.Core.Logic.CountryLogic.Queries;
 
@@ -13,15 +14,18 @@ public class CountryGetAllRequestHandler : IRequestHandler<CountryGetAllRequest,
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly ILogger<CountryGetAllRequestHandler> _logger;
 
-    public CountryGetAllRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public CountryGetAllRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CountryGetAllRequestHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<OperationResult<List<CountryViewModel>>> Handle(CountryGetAllRequest request, CancellationToken cancellationToken)
     {
+
         var operation = new OperationResult<List<CountryViewModel>>();
 
 
@@ -31,7 +35,7 @@ public class CountryGetAllRequestHandler : IRequestHandler<CountryGetAllRequest,
         var result = _mapper.Map<List<CountryViewModel>>(items.ToList());
 
         operation.Result = result;
-
+        _logger.LogInformation("CountryGetAllRequestHandler gave all country from database successfully");
         return operation;
     }
 }

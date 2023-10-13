@@ -3,12 +3,14 @@
 public class CountryUpdateHandlerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<ILogger<CountryUpdateRequestHandler>> _loggerMock;  
     private readonly IFixture _fixture;
 
     public CountryUpdateHandlerTests()
     {
         _fixture = new Fixture();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _loggerMock = new Mock<ILogger<CountryUpdateRequestHandler>>();
     }
 
     [Fact]
@@ -21,7 +23,7 @@ public class CountryUpdateHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Country>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Country, bool>>>(), default, default, default, default, default))
              .ReturnsAsync(_fixture.Build<Country>().With(x => x.People, null as List<Person>).Create());
 
-        var handler = new CountryUpdateRequestHandler(_unitOfWorkMock.Object);
+        var handler = new CountryUpdateRequestHandler(_unitOfWorkMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -38,7 +40,7 @@ public class CountryUpdateHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Country>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Country, bool>>>(), default, default, default, default, default))
              .ReturnsAsync(null as Country);
 
-        var handler = new CountryUpdateRequestHandler(_unitOfWorkMock.Object);
+        var handler = new CountryUpdateRequestHandler(_unitOfWorkMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -58,7 +60,7 @@ public class CountryUpdateHandlerTests
             .ReturnsAsync(null as Country)
             .ReturnsAsync(_fixture.Build<Country>().With(x => x.People, null as List<Person>).With(x => x.Id, country.Id).Create());
         
-        var handler = new CountryUpdateRequestHandler(_unitOfWorkMock.Object);
+        var handler = new CountryUpdateRequestHandler(_unitOfWorkMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 

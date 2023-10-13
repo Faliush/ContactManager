@@ -6,6 +6,7 @@ public class PersonCreateHandlerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<IDateCalcualtorService> _dateCalculatorMock;
+    private readonly Mock<ILogger<PersonCreateRequestHandler>> _loggerMock;
     private readonly ClaimsPrincipal _user; 
     private readonly IFixture _fixture;
     private readonly IMapper _mapper;
@@ -15,6 +16,7 @@ public class PersonCreateHandlerTests
         _fixture = new Fixture();   
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _dateCalculatorMock = new Mock<IDateCalcualtorService>();
+        _loggerMock = new Mock<ILogger<PersonCreateRequestHandler>>();
         _user = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim> { new Claim(ClaimTypes.Name, "mock") }, "mock"));
 
         if (_mapper == null)
@@ -40,7 +42,7 @@ public class PersonCreateHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, default, default, default))
             .ReturnsAsync(_fixture.Build<Person>().With(x => x.Email, "test@gmail.com").With(x => x.Country, null as Country).Create());
 
-        var handler = new PersonCreateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object);
+        var handler = new PersonCreateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -61,7 +63,7 @@ public class PersonCreateHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, default, default, default))
             .ReturnsAsync(null as Person);
 
-        var handler = new PersonCreateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object);
+        var handler = new PersonCreateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -82,7 +84,7 @@ public class PersonCreateHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, default, default, default))
             .ReturnsAsync(null as Person);
 
-        var handler = new PersonCreateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object);
+        var handler = new PersonCreateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -116,7 +118,7 @@ public class PersonCreateHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, default, default, default))
             .ReturnsAsync(null as Person);
 
-        var handler = new PersonCreateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object);
+        var handler = new PersonCreateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 

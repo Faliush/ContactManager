@@ -5,6 +5,7 @@ using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Faliush.ContactManager.Core.Logic.PersonLogic.Queries;
 
@@ -16,10 +17,15 @@ public class PersonGetFilteredRequestHandler : IRequestHandler<PersonGetFiltered
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    public PersonGetFilteredRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    private readonly ILogger<PersonGetFilteredRequestHandler> _logger;
+    public PersonGetFilteredRequestHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        ILogger<PersonGetFilteredRequestHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<OperationResult<List<PeopleViewModel>>> Handle(PersonGetFilteredRequest request, CancellationToken cancellationToken)
@@ -33,6 +39,7 @@ public class PersonGetFilteredRequestHandler : IRequestHandler<PersonGetFiltered
 
         var result = _mapper.Map<List<PeopleViewModel>>(items.ToList());
 
+        _logger.LogInformation("PersonGetFilteredRequest gave all person from database");
         return OperationResult<List<PeopleViewModel>>.CreateResult(result);
     }
 }
