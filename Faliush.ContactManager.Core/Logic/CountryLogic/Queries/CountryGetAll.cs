@@ -35,7 +35,7 @@ public class CountryGetAllRequestHandler : IRequestHandler<CountryGetAllRequest,
         var result = _mapper.Map<List<CountryViewModel>>(items.ToList());
 
         operation.Result = result;
-        _logger.LogInformation("CountryGetAllRequestHandler get all country from database successfully");
+        _logger.LogInformation("CountryGetAllRequestHandler gave all country from database successfully");
         return operation;
     }
 }

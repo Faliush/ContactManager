@@ -47,7 +47,7 @@ public class CountryGetForUpdateRequestHandler : IRequestHandler<CountryGetForUp
         };
 
         operation.Result = result;
-        _logger.LogInformation("CountryGetForUpdateRequestHandler get nedded country for update from database successfully");
+        _logger.LogInformation("CountryGetForUpdateRequestHandler gave need country for update from database successfully");
         return operation;
     }
 }
