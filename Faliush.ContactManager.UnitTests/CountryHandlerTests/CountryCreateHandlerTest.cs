@@ -3,12 +3,14 @@
 public class CountryCreateHandlerTest
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<ILogger<CountryCreateRequestHandler>> _loggerMock;
     private readonly IFixture _fixture;
 
     public CountryCreateHandlerTest()
     {
         _fixture = new Fixture();   
         _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _loggerMock = new Mock<ILogger<CountryCreateRequestHandler>>();
     }
 
     [Fact]
@@ -22,7 +24,7 @@ public class CountryCreateHandlerTest
         _unitOfWorkMock.Setup(x => x.GetRepository<Country>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Country, bool>>>(), default, default, default, default, default))
              .ReturnsAsync(new Country() { Name = "country" });
 
-        var handler = new CountryCreateRequestHandler(_unitOfWorkMock.Object);
+        var handler = new CountryCreateRequestHandler(_unitOfWorkMock.Object, _loggerMock.Object);
 
         // act
         var result = await handler.Handle(request, default);
@@ -44,7 +46,7 @@ public class CountryCreateHandlerTest
         _unitOfWorkMock.Setup(x => x.GetRepository<Country>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Country, bool>>>(), default, default, default, default, default))
             .ReturnsAsync(null as Country);
 
-        var handler = new CountryCreateRequestHandler(_unitOfWorkMock.Object);
+        var handler = new CountryCreateRequestHandler(_unitOfWorkMock.Object, _loggerMock.Object);
 
         // act
         var result = await handler.Handle(request, default);

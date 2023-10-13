@@ -14,3 +14,4 @@ global using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
 global using Faliush.ContactManager.Core.Mappers;
 global using Faliush.ContactManager.Core.Services;
 global using Faliush.ContactManager.Models.Base;
+global using Microsoft.Extensions.Logging;

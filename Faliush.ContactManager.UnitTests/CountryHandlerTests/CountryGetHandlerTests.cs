@@ -3,6 +3,8 @@
 public class CountryGetHandlerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<ILogger<CountryGetAllRequestHandler>> _loggerGetAllMock;
+    private readonly Mock<ILogger<CountryGetForUpdateRequestHandler>> _loggerGetForUpdateMock;
     private readonly IFixture _fixture;
     private readonly IMapper _mapper;
 
@@ -10,6 +12,8 @@ public class CountryGetHandlerTests
     {
         _fixture = new Fixture();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _loggerGetAllMock = new Mock<ILogger<CountryGetAllRequestHandler>>();
+        _loggerGetForUpdateMock = new Mock<ILogger<CountryGetForUpdateRequestHandler>>();
         
         if (_mapper == null)
         {
@@ -32,7 +36,7 @@ public class CountryGetHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Country>().GetAllAsync(default, default, default, default, default, default))
             .ReturnsAsync(new List<Country>());
 
-        var handler = new CountryGetAllRequestHandler(_unitOfWorkMock.Object, _mapper);
+        var handler = new CountryGetAllRequestHandler(_unitOfWorkMock.Object, _mapper, _loggerGetAllMock.Object);
 
         // act 
 
@@ -60,7 +64,7 @@ public class CountryGetHandlerTests
 
         var expected = countries.Select(x => new CountryViewModel() { Name = x.Name, Id = x.Id }).ToList();
 
-        var handler = new CountryGetAllRequestHandler(_unitOfWorkMock.Object, _mapper);
+        var handler = new CountryGetAllRequestHandler(_unitOfWorkMock.Object, _mapper, _loggerGetAllMock.Object);
 
         // act 
         var result = await handler.Handle(request, default);
@@ -80,7 +84,7 @@ public class CountryGetHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Country>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Country, bool>>>(), default, default, default, default, default))
              .ReturnsAsync(null as Country);
 
-        var handler = new CountryGetForUpdateRequestHandler(_unitOfWorkMock.Object);
+        var handler = new CountryGetForUpdateRequestHandler(_unitOfWorkMock.Object, _loggerGetForUpdateMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -99,7 +103,7 @@ public class CountryGetHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Country>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Country, bool>>>(), default, default, true, default, default))
              .ReturnsAsync(country);
 
-        var handler = new CountryGetForUpdateRequestHandler(_unitOfWorkMock.Object);
+        var handler = new CountryGetForUpdateRequestHandler(_unitOfWorkMock.Object, _loggerGetForUpdateMock.Object);
 
         var result = await handler.Handle(request, default);
 

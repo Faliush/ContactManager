@@ -3,12 +3,14 @@
 public class PersonDeleteHandlerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<ILogger<PersonDeleteRequestHandler>> _loggerMock;
     private readonly IFixture _fixture;
 
     public PersonDeleteHandlerTests()
     {
         _fixture = new Fixture();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _loggerMock = new Mock<ILogger<PersonDeleteRequestHandler>>();
     }
 
     [Fact]
@@ -21,7 +23,7 @@ public class PersonDeleteHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, default, default, default))
             .ReturnsAsync(null as Person);
 
-        var handler = new PersonDeleteRequestHandler(_unitOfWorkMock.Object);
+        var handler = new PersonDeleteRequestHandler(_unitOfWorkMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -40,7 +42,7 @@ public class PersonDeleteHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, default, default, default))
             .ReturnsAsync(_fixture.Build<Person>().With(x => x.Id, personId).With(x => x.Country, null as Country).Create());
 
-        var handler = new PersonDeleteRequestHandler(_unitOfWorkMock.Object);
+        var handler = new PersonDeleteRequestHandler(_unitOfWorkMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -59,7 +61,7 @@ public class PersonDeleteHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, default, default, default))
             .ReturnsAsync(_fixture.Build<Person>().With(x => x.Id, personId).With(x =>  x.Country, null as Country).Create());
 
-        var handler = new PersonDeleteRequestHandler(_unitOfWorkMock.Object);
+        var handler = new PersonDeleteRequestHandler(_unitOfWorkMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
