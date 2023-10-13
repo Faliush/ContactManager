@@ -1,17 +1,10 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-EXPOSE 82
-
-COPY BlazorClient/BlazorClient.csproj .
-RUN dotnet restore BlazorClient.csproj
-COPY . .
-RUN dotnet build BlazorClient.csproj -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish BlazorClient.csproj -c Release -o /app/publish
-
-FROM nginx:alpine AS final
-WORKDIR /usr/share/nginx/html
-COPY --from=publish /app/publish/wwwroot .
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+WORKDIR /app
+COPY . ./
+RUN dotnet publish -c Release -o output
+FROM nginx:alpine
+WORKDIR /var/www/web
+COPY --from=build-env /app/output/wwwroot .
 COPY BlazorClient/nginx.conf /etc/nginx/nginx.conf
+EXPOSE 82
 
