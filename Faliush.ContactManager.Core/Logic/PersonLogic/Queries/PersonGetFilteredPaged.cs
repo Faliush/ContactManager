@@ -6,6 +6,7 @@ using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
 using Faliush.ContactManager.Models;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Faliush.ContactManager.Core.Logic.PersonLogic.Queries;
 
@@ -22,11 +23,16 @@ public class PersonGetFilteredPagedRequestHandler : IRequestHandler<PersonGetFil
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly ILogger<PersonGetFilteredPagedRequestHandler> _logger;
 
-    public PersonGetFilteredPagedRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public PersonGetFilteredPagedRequestHandler(
+        IUnitOfWork unitOfWork, 
+        IMapper mapper, 
+        ILogger<PersonGetFilteredPagedRequestHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<OperationResult<IPagedList<PeopleViewModel>>> Handle(PersonGetFilteredPagedRequest request, CancellationToken cancellationToken)
@@ -43,6 +49,7 @@ public class PersonGetFilteredPagedRequestHandler : IRequestHandler<PersonGetFil
 
         var result = _mapper.Map<IPagedList<PeopleViewModel>>(items);
 
+        _logger.LogInformation($"PersonGetFilteredPagedRequestHandler gave persons on page {items.PageIndex}");
         return OperationResult<IPagedList<PeopleViewModel>>.CreateResult(result); 
     }
 }
