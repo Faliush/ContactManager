@@ -89,18 +89,18 @@ services:
     #   timeout: 5s
     #   retries: 5
 
-  # webui:
-  #   container_name: BlazorClient
-  #   build:
-  #     context: .
-  #     dockerfile: BlazorClient/Dockerfile
-  #   ports:
-  #     - 7000:82
-  #   depends_on:
-  #     - webapi
-  #     - auth.server
-  #   networks:
-  #     - application
+  webui:
+    container_name: BlazorClient
+    build:
+      context: .
+      dockerfile: BlazorClient/Dockerfile
+    ports:
+      - 7000:82
+    depends_on:
+      - webapi
+      - auth.server
+    networks:
+      - application
 
 
 
