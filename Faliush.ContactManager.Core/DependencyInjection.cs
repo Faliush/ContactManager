@@ -26,7 +26,7 @@ public static class DependencyInjection
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
 
         services.AddScoped<IDateCalcualtorService, DateCalculatorService>();
-        services.AddScoped<IStringConvertService, StringConvertService>();
+        
 
         return services;
     }
