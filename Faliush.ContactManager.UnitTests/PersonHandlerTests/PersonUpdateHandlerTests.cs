@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Faliush.ContactManager.Core.Services.Interfaces;
 
 namespace Faliush.ContactManager.UnitTests.PersonHandlerTests;
 

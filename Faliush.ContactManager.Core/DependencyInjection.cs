@@ -1,5 +1,6 @@
 ﻿using Faliush.ContactManager.Core.Common.ValidationBehavior;
-using Faliush.ContactManager.Core.Services;
+using Faliush.ContactManager.Core.Services.Implementations;
+using Faliush.ContactManager.Core.Services.Interfaces;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

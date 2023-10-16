@@ -2,7 +2,7 @@
 using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Exceptions;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
-using Faliush.ContactManager.Core.Services;
+using Faliush.ContactManager.Core.Services.Interfaces;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
 using MediatR;

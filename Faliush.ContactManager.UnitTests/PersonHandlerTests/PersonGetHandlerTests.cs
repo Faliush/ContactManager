@@ -1,4 +1,5 @@
 ﻿using Faliush.ContactManager.Core.Enums;
+using Faliush.ContactManager.Core.Services.Interfaces;
 using Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
 
 namespace Faliush.ContactManager.UnitTests.PersonHandlerTests;
