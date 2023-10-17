@@ -53,7 +53,7 @@ services:
       context: .
       dockerfile: IdentityServer/Dockerfile
     ports:
-      - 10000:81
+      - 10000:80
     depends_on:
       - db.postgres.auth
     environment:
@@ -100,7 +100,7 @@ services:
       context: .
       dockerfile: BlazorClient/Dockerfile
     ports:
-      - 7000:82
+      - 7000:80
     depends_on:
       - webapi
       - auth.server
@@ -108,20 +108,20 @@ services:
       - application
 
 # Api cache
-  redis:
-    container_name: Redis
-    image: redis
-    command: ["redis-server", "--appendonly", "yes"]
-    restart: always
-    ports:
-      - "6379:6379"
-    volumes:
-      - './volumes/cache/redis/data:/root/redis'
-      - './volumes/cache/redis/redis.conf:/usr/local/etc/redis/redis.conf'
-    environment:
-      - REDIS_PORT=6379
-    networks:
-      - application
+  # redis:
+  #   container_name: Redis
+  #   image: redis
+  #   command: ["redis-server", "--appendonly", "yes"]
+  #   restart: always
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - './volumes/cache/redis/data:/root/redis'
+  #     - './volumes/cache/redis/redis.conf:/usr/local/etc/redis/redis.conf'
+  #   environment:
+  #     - REDIS_PORT=6379
+  #   networks:
+  #     - application
 
 
 
