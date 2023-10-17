@@ -20,16 +20,19 @@ public class PersonUpdateRequestHandler : IRequestHandler<PersonUpdateRequest, O
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IDateCalcualtorService _dateCalcualtorService;
+    private readonly ICacheService _cacheService;
     private readonly ILogger<PersonUpdateRequestHandler> _logger;
     public PersonUpdateRequestHandler(
         IUnitOfWork unitOfWork,
-        IMapper mapper, 
+        IMapper mapper,
         IDateCalcualtorService dateCalcualtorService,
+        ICacheService cacheService,
         ILogger<PersonUpdateRequestHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _dateCalcualtorService = dateCalcualtorService;
+        _cacheService = cacheService;
         _logger = logger;
     }
 
@@ -94,6 +97,8 @@ public class PersonUpdateRequestHandler : IRequestHandler<PersonUpdateRequest, O
             operation.AddError(exception);
             return operation;
         }
+
+        await _cacheService.SetAsync($"person-{entity.Id}", entity, cancellationToken);
 
         var result = _mapper.Map<PersonViewModel>(entity);
         result.Age = _dateCalcualtorService.GetTotalYears(entity.DateOfBirth);

@@ -17,23 +17,37 @@ public class PersonGetByIdRequestHandler : IRequestHandler<PersonGetByIdRequest,
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IDateCalcualtorService _dateCalcualtorService;
+    private readonly ICacheService _cacheService;
     private readonly ILogger<PersonGetByIdRequestHandler> _logger;
 
     public PersonGetByIdRequestHandler(
-        IUnitOfWork unitOfWork, 
-        IMapper mapper, 
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
         IDateCalcualtorService dateCalcualtorService,
+        ICacheService cacheService,
         ILogger<PersonGetByIdRequestHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _dateCalcualtorService = dateCalcualtorService;
+        _cacheService = cacheService;
         _logger = logger;
     }
 
     public async Task<OperationResult<PersonViewModel>> Handle(PersonGetByIdRequest request, CancellationToken cancellationToken)
     {
         var operation = new OperationResult<PersonViewModel>();
+
+        var cachedValue = await _cacheService.GetAsync<Person>($"person-{request.Id}", cancellationToken);
+
+        if (cachedValue is not null)
+        {
+            var response = _mapper.Map<PersonViewModel>(cachedValue);
+            response.Age = _dateCalcualtorService.GetTotalYears(response.DateOfBirth);
+            operation.Result = response;
+            return operation;
+        }
+
         _logger.LogInformation("PersonGetByIdRequestHandler checks given id for existance in database");
         var item = await _unitOfWork.GetRepository<Person>()
             .GetFirstOrDefaultAsync
@@ -48,6 +62,8 @@ public class PersonGetByIdRequestHandler : IRequestHandler<PersonGetByIdRequest,
             operation.AddError(new ContactManagerNotFoundException($"person with id: {request.Id} not found"));
             return operation;   
         }
+
+        await _cacheService.SetAsync($"person-{item.Id}", item, cancellationToken);
 
         var result = _mapper.Map<PersonViewModel>(item);
         result.Age = _dateCalcualtorService.GetTotalYears(result.DateOfBirth);
