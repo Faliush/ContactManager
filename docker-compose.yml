@@ -107,18 +107,21 @@ services:
     networks:
       - application
 
-  # redis:
-  #   image: redis:latest
-  #   restart: always
-  #   ports:
-  #     - "6379:6379"
-  #   volumes:
-  #     - /path/to/local/dàta:/root/redis
-  #     - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
-  #   environment:
-  #     - REDIS_PORT=6379
-  #   networks:
-  #     - application
+# Api cache
+  redis:
+    container_name: Redis
+    image: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - './volumes/cache/redis/data:/root/redis'
+      - './volumes/cache/redis/redis.conf:/usr/local/etc/redis/redis.conf'
+    environment:
+      - REDIS_PORT=6379
+    networks:
+      - application
 
 
 

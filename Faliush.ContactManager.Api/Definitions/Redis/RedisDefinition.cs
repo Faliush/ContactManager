@@ -8,7 +8,11 @@ public class RedisDefinition : AppDefinition
     {
         builder.Services.AddStackExchangeRedisCache(options =>
         {
-            options.Configuration = builder.Configuration.GetConnectionString("Redis");
+            var configuration = Environment.GetEnvironmentVariable("REDIS_PORT") 
+                ?? builder.Configuration.GetConnectionString("Redis");
+
+            options.Configuration = configuration;
+            options.InstanceName = "ContactManagetApi";
         });
     }
 }
