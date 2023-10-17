@@ -1,5 +1,4 @@
 ﻿using Faliush.ContactManager.Core.Services.Implementations;
-using Faliush.ContactManager.Core.Services.Interfaces;
 
 namespace Faliush.ContactManager.UnitTests.ServiceTests;
 

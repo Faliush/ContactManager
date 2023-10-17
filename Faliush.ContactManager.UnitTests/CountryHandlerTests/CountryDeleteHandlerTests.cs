@@ -3,6 +3,7 @@
 public class CountryDeleteHandlerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<ICacheService> _cacheServiceMock;
     private readonly Mock<ILogger<CountryDeleteRequestHandler>> _loggerMock;
 
     private readonly IFixture _fixture;
@@ -11,6 +12,7 @@ public class CountryDeleteHandlerTests
     {
         _fixture = new Fixture();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _cacheServiceMock = new Mock<ICacheService>();
         _loggerMock = new Mock<ILogger<CountryDeleteRequestHandler>>();
     }
 
@@ -24,7 +26,7 @@ public class CountryDeleteHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Country>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Country, bool>>>(), default, default, default, default, default))
              .ReturnsAsync(null as Country);
 
-        var handler = new CountryDeleteRequestHandler(_unitOfWorkMock.Object, _loggerMock.Object);
+        var handler = new CountryDeleteRequestHandler(_unitOfWorkMock.Object, _cacheServiceMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -42,7 +44,7 @@ public class CountryDeleteHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Country>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Country, bool>>>(), default, default, default, default, default))
              .ReturnsAsync(country);
 
-        var handler = new CountryDeleteRequestHandler(_unitOfWorkMock.Object, _loggerMock.Object);
+        var handler = new CountryDeleteRequestHandler(_unitOfWorkMock.Object, _cacheServiceMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 

@@ -18,7 +18,7 @@ public class CountryDeleteRequestHandler : IRequestHandler<CountryDeleteRequest,
 
     public CountryDeleteRequestHandler(
         IUnitOfWork unitOfWork, 
-        ICacheService cacheService
+        ICacheService cacheService,
         ILogger<CountryDeleteRequestHandler> logger)
     {
         _unitOfWork = unitOfWork;

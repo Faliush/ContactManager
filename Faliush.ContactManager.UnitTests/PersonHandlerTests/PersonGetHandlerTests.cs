@@ -1,5 +1,4 @@
 ﻿using Faliush.ContactManager.Core.Enums;
-using Faliush.ContactManager.Core.Services.Interfaces;
 using Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
 
 namespace Faliush.ContactManager.UnitTests.PersonHandlerTests;
@@ -8,6 +7,7 @@ public class PersonGetHandlerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<IDateCalcualtorService> _dateCalculatorMock;
+    private readonly Mock<ICacheService> _cacheServiceMock;
     private readonly Mock<ILogger<PersonGetFilteredRequestHandler>> _loggerGetFilteredMock;
     private readonly Mock<ILogger<PersonGetFilteredPagedRequestHandler>> _loggerGetFilteredPagedMock;
     private readonly Mock<ILogger<PersonGetByIdRequestHandler>> _loggerGetByIdMock;
@@ -20,6 +20,7 @@ public class PersonGetHandlerTests
         _fixture = new Fixture();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _dateCalculatorMock = new Mock<IDateCalcualtorService>();
+        _cacheServiceMock = new Mock<ICacheService>();
         _loggerGetForUpdateMock = new Mock<ILogger<PersonGetForUpdateRequestHandler>>();
         _loggerGetFilteredPagedMock = new Mock<ILogger<PersonGetFilteredPagedRequestHandler>>();
         _loggerGetFilteredMock = new Mock<ILogger<PersonGetFilteredRequestHandler>>();
@@ -58,7 +59,7 @@ public class PersonGetHandlerTests
             .GetAllAsync(It.IsAny<Expression<Func<Person, bool>>>(), It.IsAny<Func<IQueryable<Person>, IOrderedQueryable<Person>>>(), default, default, default, default))
             .ReturnsAsync(people);
 
-        var handler = new PersonGetFilteredRequestHandler(_unitOfWorkMock.Object, _mapper, _loggerGetFilteredMock.Object);
+        var handler = new PersonGetFilteredRequestHandler(_unitOfWorkMock.Object, _mapper, _cacheServiceMock.Object, _loggerGetFilteredMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -98,7 +99,7 @@ public class PersonGetHandlerTests
                 default))
             .ReturnsAsync(people.ToPagedList(indexPage, pageSize));
 
-        var handler = new PersonGetFilteredPagedRequestHandler(_unitOfWorkMock.Object, _mapper, _loggerGetFilteredPagedMock.Object);
+        var handler = new PersonGetFilteredPagedRequestHandler(_unitOfWorkMock.Object, _mapper, _cacheServiceMock.Object, _loggerGetFilteredPagedMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -117,7 +118,7 @@ public class PersonGetHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, It.IsAny<bool>(), default, default))
             .ReturnsAsync(null as Person);
 
-        var handler = new PersonGetByIdRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _loggerGetByIdMock.Object);
+        var handler = new PersonGetByIdRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _cacheServiceMock.Object, _loggerGetByIdMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -150,7 +151,7 @@ public class PersonGetHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, It.IsAny<bool>(), default, default))
             .ReturnsAsync(person);
 
-        var handler = new PersonGetByIdRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _loggerGetByIdMock.Object);
+        var handler = new PersonGetByIdRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _cacheServiceMock.Object, _loggerGetByIdMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -168,7 +169,7 @@ public class PersonGetHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, It.IsAny<bool>(), default, default))
             .ReturnsAsync(null as Person);
 
-        var handler = new PersonGetForUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _loggerGetForUpdateMock.Object);
+        var handler = new PersonGetForUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _cacheServiceMock.Object, _loggerGetForUpdateMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -201,7 +202,7 @@ public class PersonGetHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, It.IsAny<bool>(), default, default))
             .ReturnsAsync(person);
 
-        var handler = new PersonGetForUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _loggerGetForUpdateMock.Object);
+        var handler = new PersonGetForUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _cacheServiceMock.Object, _loggerGetForUpdateMock.Object);
 
         var result = await handler.Handle(request, default);
 
