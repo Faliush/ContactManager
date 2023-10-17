@@ -62,6 +62,7 @@ public class CountryCreateRequestHandler : IRequestHandler<CountryCreateRequest,
             return operation;
         }
 
+        _logger.LogInformation("Add country to cache");
         await _cacheService.SetAsync($"country-{entity.Id}", entity, cancellationToken);
         await _cacheService.RemoveAsync("countries", cancellationToken);
 

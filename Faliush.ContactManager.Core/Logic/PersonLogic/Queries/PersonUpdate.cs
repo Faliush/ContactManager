@@ -98,6 +98,7 @@ public class PersonUpdateRequestHandler : IRequestHandler<PersonUpdateRequest, O
             return operation;
         }
 
+        _logger.LogInformation("PersonUpdateRequestHandler sets updated person in the cache");
         await _cacheService.SetAsync($"person-{entity.Id}", entity, cancellationToken);
 
         var result = _mapper.Map<PersonViewModel>(entity);

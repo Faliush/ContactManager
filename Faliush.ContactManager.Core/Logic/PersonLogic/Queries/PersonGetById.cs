@@ -38,10 +38,12 @@ public class PersonGetByIdRequestHandler : IRequestHandler<PersonGetByIdRequest,
     {
         var operation = new OperationResult<PersonViewModel>();
 
+        _logger.LogInformation("PersonGetByIdRequestHandler checks given id for existance in cache");
         var cachedValue = await _cacheService.GetAsync<Person>($"person-{request.Id}", cancellationToken);
-
+        
         if (cachedValue is not null)
         {
+            _logger.LogInformation("PersonGetByIdRequestHandler gave need person by given id from cache");
             var response = _mapper.Map<PersonViewModel>(cachedValue);
             response.Age = _dateCalcualtorService.GetTotalYears(response.DateOfBirth);
             operation.Result = response;

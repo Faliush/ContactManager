@@ -41,12 +41,16 @@ public class PersonGetFilteredPagedRequestHandler : IRequestHandler<PersonGetFil
 
     public async Task<OperationResult<IPagedList<PeopleViewModel>>> Handle(PersonGetFilteredPagedRequest request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("PersonGetGetFilteredPagedRequestHandler checks given id for existance in cache");
         var cachedValues = await _cacheService
             .GetAsync<IPagedList<Person>>($"people-filtered-{request.searchBy}-{request.searchString}-{request.sortBy}-{request.sortOrder}-" +
                                           $"paged-{request.pageIndex}-{request.pageSize}");
 
         if (cachedValues is not null)
+        {
+            _logger.LogInformation($"PersonGetFilteredPagedRequestHandler gave persons on page {cachedValues.PageIndex} from cache");
             return OperationResult<IPagedList<PeopleViewModel>>.CreateResult(_mapper.Map<IPagedList<PeopleViewModel>>(cachedValues));
+        }
 
         var items = await _unitOfWork.GetRepository<Person>()
             .GetPagedListAsync

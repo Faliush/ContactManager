@@ -30,16 +30,18 @@ public class CountryGetForUpdateRequestHandler : IRequestHandler<CountryGetForUp
     public async Task<OperationResult<CountryUpdateViewModel>> Handle(CountryGetForUpdateRequest request, CancellationToken cancellationToken)
     {
         var operation = new OperationResult<CountryUpdateViewModel>();
-        _logger.LogInformation("CountryGetForUpdateRequestHandler checks country id for existence in database");
 
+        _logger.LogInformation("CountryGetForUpdateRequestHandler checks country id for existence in cache");
         var cachedValue = await _cacheService.GetAsync<Country>($"country-{request.Id}", cancellationToken);
 
         if (cachedValue is not null)
         {
+            _logger.LogInformation("CountryGetForUpdateRequestHandler gave need country for update from cache");
             operation.Result = new CountryUpdateViewModel { Id = cachedValue.Id, Name = cachedValue.Name };
             return operation;
         }
 
+        _logger.LogInformation("CountryGetForUpdateRequestHandler checks country id for existence in database");
         var entity = await _unitOfWork.GetRepository<Country>()
             .GetFirstOrDefaultAsync
             (

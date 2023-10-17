@@ -55,6 +55,7 @@ public class CountryDeleteRequestHandler : IRequestHandler<CountryDeleteRequest,
             return operation;
         }
 
+        _logger.LogInformation("Delete country from cache");
         await _cacheService.RemoveAsync($"country-{entity.Id}", cancellationToken);
         await _cacheService.RemoveAsync("countries", cancellationToken);
 

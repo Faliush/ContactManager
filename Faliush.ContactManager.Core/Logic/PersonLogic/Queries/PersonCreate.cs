@@ -82,6 +82,7 @@ public class PersonCreateRequestHandler : IRequestHandler<PersonCreateRequest, O
             return operation;
         }
 
+        _logger.LogInformation("PersonCreateRequestHandler sets new person in the cache");
         await _cacheService.SetAsync($"person-{entity.Id}", entity, cancellationToken);
         await _cacheService.RemoveByPrefixAsync("people-filtered", cancellationToken);
 

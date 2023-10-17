@@ -72,6 +72,7 @@ public class CountryUpdateRequestHandler : IRequestHandler<CountryUpdateRequest,
             return operation;
         }
 
+        _logger.LogInformation("CountryUpdateRequestHandler sets updated country in the cache");
         await _cacheService.SetAsync($"country-{entity.Id}", entity, cancellationToken);
 
         var result = new CountryViewModel()

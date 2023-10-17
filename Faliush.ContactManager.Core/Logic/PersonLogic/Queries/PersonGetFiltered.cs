@@ -34,11 +34,15 @@ public class PersonGetFilteredRequestHandler : IRequestHandler<PersonGetFiltered
 
     public async Task<OperationResult<List<PeopleViewModel>>> Handle(PersonGetFilteredRequest request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("PersonGetFilteredRequestHandler checks given id for existance in cache");
         var cachedValues = await _cacheService
             .GetAsync<List<Person>>($"people-filtered-{request.searchBy}-{request.searchString}-{request.sortBy}-{request.sortOrder}");
 
         if(cachedValues is not null)
+        {
+            _logger.LogInformation("PersonGetFilteredRequest gave all person from cache");
             return OperationResult<List<PeopleViewModel>>.CreateResult(_mapper.Map<List<PeopleViewModel>>(cachedValues));
+        }
         
         var items = await _unitOfWork.GetRepository<Person>()
             .GetAllAsync

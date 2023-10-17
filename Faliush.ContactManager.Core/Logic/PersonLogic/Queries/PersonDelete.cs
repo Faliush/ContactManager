@@ -56,6 +56,7 @@ public class PersonDeleteRequestHandler : IRequestHandler<PersonDeleteRequest, O
             return operation;
         }
 
+        _logger.LogInformation("PersonDeleteRequestHandler removes person by id from cache");
         await _cacheService.RemoveAsync($"person-{entity.Id}", cancellationToken);
         await _cacheService.RemoveByPrefixAsync("people-filtered", cancellationToken);
 

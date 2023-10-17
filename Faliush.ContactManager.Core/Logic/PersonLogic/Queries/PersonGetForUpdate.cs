@@ -34,10 +34,12 @@ public class PersonGetForUpdateRequestHandler : IRequestHandler<PersonGetForUpda
     {
         var operation = new OperationResult<PersonUpdateViewModel>();
 
+        _logger.LogInformation("PersonGetForUpdateRequestHandler checks given id for existance in cache");
         var cachedValue = await _cacheService.GetAsync<Person>($"person-{request.Id}", cancellationToken);
 
         if(cachedValue is not null)
         {
+            _logger.LogInformation("PersonGetForUpdateRequestHandler gave need person from cache");
             operation.Result = _mapper.Map<PersonUpdateViewModel>(cachedValue);
             return operation;
         }

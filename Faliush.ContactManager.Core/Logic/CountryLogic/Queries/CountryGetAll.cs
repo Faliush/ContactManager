@@ -34,10 +34,12 @@ public class CountryGetAllRequestHandler : IRequestHandler<CountryGetAllRequest,
     {
         var operation = new OperationResult<List<CountryViewModel>>();
 
+        _logger.LogInformation("CountryGetAllRequestHandler checks list of countries for existance in cache");
         var cachedValues = await _cacheService.GetAsync<List<Country>>("countries", cancellationToken);
 
         if(cachedValues is not null)
         {
+            _logger.LogInformation("Give list of countries from cache");
             operation.Result = _mapper.Map<List<CountryViewModel>>(cachedValues); 
             return operation;
         }
@@ -45,6 +47,7 @@ public class CountryGetAllRequestHandler : IRequestHandler<CountryGetAllRequest,
         var items = await _unitOfWork.GetRepository<Country>()
             .GetAllAsync();
 
+        _logger.LogInformation("CountryGetAllRequestHandler sets the list of countris in the cache");
         await _cacheService.SetAsync("countries", items.ToList(), cancellationToken);
         
         var result = _mapper.Map<List<CountryViewModel>>(items.ToList());
