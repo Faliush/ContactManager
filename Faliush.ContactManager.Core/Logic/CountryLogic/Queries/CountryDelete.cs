@@ -1,5 +1,6 @@
 ﻿using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Exceptions;
+using Faliush.ContactManager.Core.Services.Interfaces;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
 using MediatR;
@@ -12,11 +13,16 @@ public record CountryDeleteRequest(Guid Id) : IRequest<OperationResult<Guid>>;
 public class CountryDeleteRequestHandler : IRequestHandler<CountryDeleteRequest, OperationResult<Guid>>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICacheService _cacheService;
     private readonly ILogger<CountryDeleteRequestHandler> _logger;
 
-    public CountryDeleteRequestHandler(IUnitOfWork unitOfWork, ILogger<CountryDeleteRequestHandler> logger)
+    public CountryDeleteRequestHandler(
+        IUnitOfWork unitOfWork, 
+        ICacheService cacheService,
+        ILogger<CountryDeleteRequestHandler> logger)
     {
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
         _logger = logger;
     }
     
@@ -48,6 +54,10 @@ public class CountryDeleteRequestHandler : IRequestHandler<CountryDeleteRequest,
             operation.AddError(exception);
             return operation;
         }
+
+        _logger.LogInformation("Delete country from cache");
+        await _cacheService.RemoveAsync($"country-{entity.Id}", cancellationToken);
+        await _cacheService.RemoveAsync("countries", cancellationToken);
 
         operation.Result = entity.Id;
         _logger.LogInformation("Country was deleted successfyly");

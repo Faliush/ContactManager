@@ -1,4 +1,6 @@
-﻿namespace Faliush.ContactManager.UnitTests.ServiceTests;
+﻿using Faliush.ContactManager.Core.Services.Implementations;
+
+namespace Faliush.ContactManager.UnitTests.ServiceTests;
 
 public class DateCalculatorServiceTests
 {

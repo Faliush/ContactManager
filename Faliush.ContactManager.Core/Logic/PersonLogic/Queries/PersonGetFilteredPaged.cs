@@ -2,6 +2,7 @@
 using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Enums;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
+using Faliush.ContactManager.Core.Services.Interfaces;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Infrastructure.UnitOfWork.Pagination;
 using Faliush.ContactManager.Models;
@@ -23,20 +24,34 @@ public class PersonGetFilteredPagedRequestHandler : IRequestHandler<PersonGetFil
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly ICacheService _cacheService;
     private readonly ILogger<PersonGetFilteredPagedRequestHandler> _logger;
 
     public PersonGetFilteredPagedRequestHandler(
         IUnitOfWork unitOfWork, 
         IMapper mapper, 
+        ICacheService cacheService,
         ILogger<PersonGetFilteredPagedRequestHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _cacheService = cacheService;
         _logger = logger;
     }
 
     public async Task<OperationResult<IPagedList<PeopleViewModel>>> Handle(PersonGetFilteredPagedRequest request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("PersonGetGetFilteredPagedRequestHandler checks given id for existance in cache");
+        var cachedValues = await _cacheService
+            .GetAsync<IPagedList<Person>>($"people-filtered-{request.searchBy}-{request.searchString}-{request.sortBy}-{request.sortOrder}-" +
+                                          $"paged-{request.pageIndex}-{request.pageSize}");
+
+        if (cachedValues is not null)
+        {
+            _logger.LogInformation($"PersonGetFilteredPagedRequestHandler gave persons on page {cachedValues.PageIndex} from cache");
+            return OperationResult<IPagedList<PeopleViewModel>>.CreateResult(_mapper.Map<IPagedList<PeopleViewModel>>(cachedValues));
+        }
+
         var items = await _unitOfWork.GetRepository<Person>()
             .GetPagedListAsync
             (
@@ -46,6 +61,11 @@ public class PersonGetFilteredPagedRequestHandler : IRequestHandler<PersonGetFil
                 pageSize: request.pageSize,
                 disableTracking: true
             );
+
+        await _cacheService.SetAsync($"people-filtered-{request.searchBy}-{request.searchString}-{request.sortBy}-{request.sortOrder}-" +
+                                     $"paged-{request.pageIndex}-{request.pageSize}",
+                                     items,
+                                     cancellationToken);
 
         var result = _mapper.Map<IPagedList<PeopleViewModel>>(items);
 

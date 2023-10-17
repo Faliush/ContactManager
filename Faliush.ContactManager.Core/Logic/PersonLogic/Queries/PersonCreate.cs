@@ -2,7 +2,7 @@
 using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Exceptions;
 using Faliush.ContactManager.Core.Logic.PersonLogic.ViewModels;
-using Faliush.ContactManager.Core.Services;
+using Faliush.ContactManager.Core.Services.Interfaces;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
 using MediatR;
@@ -19,17 +19,20 @@ public class PersonCreateRequestHandler : IRequestHandler<PersonCreateRequest, O
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IDateCalcualtorService _dateCalcualtorService;
+    private readonly ICacheService _cacheService;
     private readonly ILogger<PersonCreateRequestHandler> _logger;   
 
     public PersonCreateRequestHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper, 
         IDateCalcualtorService dateCalcualtorService,
+        ICacheService cacheService,
         ILogger<PersonCreateRequestHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _dateCalcualtorService = dateCalcualtorService;
+        _cacheService = cacheService;
         _logger = logger;
     }
 
@@ -78,6 +81,10 @@ public class PersonCreateRequestHandler : IRequestHandler<PersonCreateRequest, O
             operation.AddError(exception);
             return operation;
         }
+
+        _logger.LogInformation("PersonCreateRequestHandler sets new person in the cache");
+        await _cacheService.SetAsync($"person-{entity.Id}", entity, cancellationToken);
+        await _cacheService.RemoveByPrefixAsync("people-filtered", cancellationToken);
 
         var result = _mapper.Map<PersonViewModel>(entity);
         result.Age = _dateCalcualtorService.GetTotalYears(result.DateOfBirth);

@@ -1,5 +1,6 @@
 ﻿using Faliush.ContactManager.Core.Common.ValidationBehavior;
-using Faliush.ContactManager.Core.Services;
+using Faliush.ContactManager.Core.Services.Implementations;
+using Faliush.ContactManager.Core.Services.Interfaces;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,8 @@ public static class DependencyInjection
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
 
         services.AddScoped<IDateCalcualtorService, DateCalculatorService>();
-        services.AddScoped<IStringConvertService, StringConvertService>();
+        services.AddSingleton<ICacheService, CacheService>();
+        
 
         return services;
     }

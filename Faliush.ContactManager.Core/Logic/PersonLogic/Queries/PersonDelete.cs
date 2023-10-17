@@ -1,5 +1,6 @@
 ﻿using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Exceptions;
+using Faliush.ContactManager.Core.Services.Interfaces;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
 using MediatR;
@@ -12,11 +13,16 @@ public record PersonDeleteRequest(Guid Id) : IRequest<OperationResult<Guid>>;
 public class PersonDeleteRequestHandler : IRequestHandler<PersonDeleteRequest, OperationResult<Guid>>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICacheService _cacheService;
     private readonly ILogger<PersonDeleteRequestHandler> _logger;
 
-    public PersonDeleteRequestHandler(IUnitOfWork unitOfWork, ILogger<PersonDeleteRequestHandler> logger)
+    public PersonDeleteRequestHandler(
+        IUnitOfWork unitOfWork, 
+        ICacheService cacheService,
+        ILogger<PersonDeleteRequestHandler> logger)
     {
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
         _logger = logger;
     }
     
@@ -49,6 +55,10 @@ public class PersonDeleteRequestHandler : IRequestHandler<PersonDeleteRequest, O
             operation.AddError(exception);
             return operation;
         }
+
+        _logger.LogInformation("PersonDeleteRequestHandler removes person by id from cache");
+        await _cacheService.RemoveAsync($"person-{entity.Id}", cancellationToken);
+        await _cacheService.RemoveByPrefixAsync("people-filtered", cancellationToken);
 
         operation.Result = entity.Id;
         _logger.LogInformation("Person was deleted successfully"); 

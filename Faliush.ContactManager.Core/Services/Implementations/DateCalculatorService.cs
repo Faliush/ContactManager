@@ -1,4 +1,6 @@
-﻿namespace Faliush.ContactManager.Core.Services;
+﻿using Faliush.ContactManager.Core.Services.Interfaces;
+
+namespace Faliush.ContactManager.Core.Services.Implementations;
 
 public class DateCalculatorService : IDateCalcualtorService
 {

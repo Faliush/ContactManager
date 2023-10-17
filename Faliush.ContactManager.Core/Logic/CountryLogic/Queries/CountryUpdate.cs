@@ -1,6 +1,7 @@
 ﻿using Faliush.ContactManager.Core.Common.OperationResult;
 using Faliush.ContactManager.Core.Exceptions;
 using Faliush.ContactManager.Core.Logic.CountryLogic.ViewModels;
+using Faliush.ContactManager.Core.Services.Interfaces;
 using Faliush.ContactManager.Infrastructure.UnitOfWork;
 using Faliush.ContactManager.Models;
 using MediatR;
@@ -13,11 +14,16 @@ public record CountryUpdateRequest(CountryUpdateViewModel Model) : IRequest<Oper
 public class CountryUpdateRequestHandler : IRequestHandler<CountryUpdateRequest, OperationResult<CountryViewModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICacheService _cacheService;
     private readonly ILogger<CountryUpdateRequestHandler> _logger;
 
-    public CountryUpdateRequestHandler(IUnitOfWork unitOfWork, ILogger<CountryUpdateRequestHandler> logger)
+    public CountryUpdateRequestHandler(
+        IUnitOfWork unitOfWork, 
+        ICacheService cacheService,
+        ILogger<CountryUpdateRequestHandler> logger)
     {
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
         _logger = logger;
     }
 
@@ -65,6 +71,9 @@ public class CountryUpdateRequestHandler : IRequestHandler<CountryUpdateRequest,
             operation.AddError(exception);
             return operation;
         }
+
+        _logger.LogInformation("CountryUpdateRequestHandler sets updated country in the cache");
+        await _cacheService.SetAsync($"country-{entity.Id}", entity, cancellationToken);
 
         var result = new CountryViewModel()
         {

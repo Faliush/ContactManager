@@ -6,6 +6,7 @@ public class PersonUpdateHandlerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<IDateCalcualtorService> _dateCalculatorMock;
+    private readonly Mock<ICacheService> _cacheServiceMock;
     private readonly Mock<ILogger<PersonUpdateRequestHandler>> _loggerMock;
     private readonly ClaimsPrincipal _user;
     private readonly IFixture _fixture;
@@ -16,6 +17,7 @@ public class PersonUpdateHandlerTests
         _fixture = new Fixture();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _dateCalculatorMock = new Mock<IDateCalcualtorService>();
+        _cacheServiceMock = new Mock<ICacheService>();  
         _loggerMock = new Mock<ILogger<PersonUpdateRequestHandler>>();
         _user = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim> { new Claim(ClaimTypes.Name, "mock") }, "mock"));
 
@@ -40,7 +42,7 @@ public class PersonUpdateHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, false, default, default))
             .ReturnsAsync(_fixture.Build<Person>().With(x => x.Country, null as Country).Create());
 
-        var handler = new PersonUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _loggerMock.Object);
+        var handler = new PersonUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _cacheServiceMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -58,7 +60,7 @@ public class PersonUpdateHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Person>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Person, bool>>>(), default, default, false, default, default))
             .ReturnsAsync(null as Person);
 
-        var handler = new PersonUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _loggerMock.Object);
+        var handler = new PersonUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _cacheServiceMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -79,7 +81,7 @@ public class PersonUpdateHandlerTests
         _unitOfWorkMock.Setup(x => x.GetRepository<Country>().GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Country, bool>>>(), default, default, false, default, default))
             .ReturnsAsync(null as Country);
 
-        var handler = new PersonUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _loggerMock.Object);
+        var handler = new PersonUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _cacheServiceMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -101,7 +103,7 @@ public class PersonUpdateHandlerTests
             .ReturnsAsync(_fixture.Build<Country>().With(x => x.People, null as List<Person>).Create());
         _unitOfWorkMock.Setup(x => x.LastSaveChangeResult).Returns(_fixture.Build<SaveChangesResult>().With(x => x.Exception, new ContactManagerSaveDatabaseException()).Create());
 
-        var handler = new PersonUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _loggerMock.Object);
+        var handler = new PersonUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _cacheServiceMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
@@ -137,7 +139,7 @@ public class PersonUpdateHandlerTests
             .ReturnsAsync(_fixture.Build<Country>().With(x => x.Name, "country").With(x => x.People, null as List<Person>).Create());
         _unitOfWorkMock.Setup(x => x.LastSaveChangeResult).Returns(new SaveChangesResult());
 
-        var handler = new PersonUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _loggerMock.Object);
+        var handler = new PersonUpdateRequestHandler(_unitOfWorkMock.Object, _mapper, _dateCalculatorMock.Object, _cacheServiceMock.Object, _loggerMock.Object);
 
         var result = await handler.Handle(request, default);
 
