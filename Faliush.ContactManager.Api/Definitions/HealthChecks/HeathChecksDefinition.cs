@@ -12,6 +12,6 @@ public class HeathChecksDefinition : AppDefinition
 
     public override void ConfigureApplication(WebApplication app)
     {
-        
+        app.MapHealthChecks("/health");
     }
 }

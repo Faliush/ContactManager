@@ -87,11 +87,11 @@ services:
       - DB_API_PORT=5432 
     networks:
       - application
-    # healthcheck:
-    #   test: curl --fail http://localhost:5000/healthz || exit 1
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 5
+    healthcheck:
+      test: curl --fail http://localhost:5000/health || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 # UI for Api
   webui:
@@ -108,20 +108,20 @@ services:
       - application
 
 # Api cache
-  # redis:
-  #   container_name: Redis
-  #   image: redis
-  #   command: ["redis-server", "--appendonly", "yes"]
-  #   restart: always
-  #   ports:
-  #     - "6379:6379"
-  #   volumes:
-  #     - './volumes/cache/redis/data:/root/redis'
-  #     - './volumes/cache/redis/redis.conf:/usr/local/etc/redis/redis.conf'
-  #   environment:
-  #     - REDIS_PORT=6379
-  #   networks:
-  #     - application
+  redis:
+    container_name: Redis
+    image: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - './volumes/cache/redis/data:/root/redis'
+      - './volumes/cache/redis/redis.conf:/usr/local/etc/redis/redis.conf'
+    environment:
+      - REDIS_PORT=6379
+    networks:
+      - application
 
 
 
