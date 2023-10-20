@@ -23,10 +23,10 @@ Below you can see the main page of the site. I can assure you that the rest of t
 ## Project Architecture
 Project has three services, Client was created on ***Blazor***, Auth Server by using ***IdentityServer4*** and Api on ***ASP.NET Core APIs*** 
 
-Api was created by using Clean Architecture and has:
+Api was created by using Vertical Slice Architecture and has:
 + Api layer
   - [x] Authorization
-  - [x] Mediator
+  - [x] CQRS
   - [x] Minimal Api 
   - [x] Definitions 
 + Core layer
